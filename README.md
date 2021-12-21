@@ -1,3 +1,10 @@
+# Dependencies
+created app with 'npx create-react-app solidefied'
+
+npm i react-router-dom react-helmet react-hook-form yup react-yup @hookform/resolvers react-axios swr react-i18next i18next --save
+
+npm i @mui/material @emotion/react @emotion/styled @mui/styles @mui/icons-material @mui/lab --save
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
