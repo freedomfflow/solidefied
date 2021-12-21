@@ -1,11 +1,14 @@
 import { createTheme } from "@mui/material/styles";
 
-import red from "@mui/material/colors/red";
-import orange from "@mui/material/colors/orange";
-import yellow from "@mui/material/colors/yellow";
-import green from "@mui/material/colors/green";
-import lightBlue from "@mui/material/colors/lightBlue";
-import grey from "@mui/material/colors/grey";
+import { green, grey, red, yellow } from "@mui/material/colors";
+
+const primaryColor  = '#54637a';
+const primaryColorLight  = '#819ca9';
+const primaryColorDark = '#29434e';
+const secondaryColor  = '#0d47a1';
+const secondaryColorLight  = '#5472d3';
+const secondaryColorDark = '#002171';
+const lightBlue = '#64c1ff';
 
 const FONT_FAMILIES = [
   '-apple-system',
@@ -22,13 +25,16 @@ const theme =
       palette: {
         mode: 'light',
         primary: {
-          main: orange[500]
+          light: primaryColorLight,
+          main: primaryColor,
+          dark: primaryColorDark,
+          contrast: grey[200],
         },
         secondary: {
-          light: red[500],
-          main: red[700],
-          dark: red[900],
-          contrastText: grey[50]
+          light: secondaryColorLight,
+          main: secondaryColor,
+          dark: secondaryColorDark,
+          contrastText: grey[500]
         },
         error: {
           light: red[400],
@@ -44,7 +50,7 @@ const theme =
           contrastText: grey[800]
         },
         info: {
-          main: lightBlue[500]
+          main: lightBlue
         },
         text: {
           primary: grey[900],
@@ -64,7 +70,7 @@ const theme =
           selectedOpacity: 1
         },
         background: {
-          default: orange[300],
+          default: grey[400],
           paper: grey[200]
         },
         common: {
@@ -81,6 +87,13 @@ const theme =
           styleOverrides: `
             a:-webkit-any-link {
               text-decoration: none;
+              color: ${grey[200]};
+              &:visited {
+                color: ${grey[500]}
+              }
+              &:hover {
+                color: ${lightBlue}
+              }
             }
          `,
         },

@@ -2,7 +2,7 @@ import React, {Suspense} from 'react';
 import {BrowserRouter} from 'react-router-dom';
 import logo from './logo.svg';
 import {ThemeProvider} from "@mui/material/styles";
-import {CssBaseline, GlobalStyles, Paper} from "@mui/material";
+import {CssBaseline, Paper, Typography } from "@mui/material";
 import {theme } from './libs/ui';
 
 const Providers = ({children}) => {
@@ -21,7 +21,7 @@ const Providers = ({children}) => {
 
 let style = {
   container: {
-    backgroundColor: 'green',
+    backgroundColor: 'primary.main',
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
@@ -38,9 +38,9 @@ function App() {
         <Paper sx={style.container}>
           <header>
             <img src={logo} className="App-logo" alt="logo"/>
-            <p>
+            <Typography color='primary.contrast' sx={{fontWeight: 'bold'}}>
               Edit <code>src/App.js</code> and save to reload.
-            </p>
+            </Typography>
             <a
                 className="App-link"
                 href="https://reactjs.org"
