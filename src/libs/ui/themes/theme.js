@@ -1,5 +1,3 @@
-import { createTheme } from "@mui/material/styles";
-
 import { green, grey, red, yellow } from "@mui/material/colors";
 
 const primaryColor  = '#54637a';
@@ -20,10 +18,14 @@ const FONT_FAMILIES = [
   'sans-serif'
 ].join(',');
 
-const theme =
-    createTheme({
+// TODO  make a base theme and deconstruct that to reuse in custom themes
+// TODO  the concept is we might have diff themes as options for new applicants to select for auto generation of web page
+// TODO  do I have a theme file for each theme, or have them all in here in an object??
+
+const themes = {
+  'solidefied': {
       palette: {
-        mode: 'light',
+        mode: 'dark',
         primary: {
           light: primaryColorLight,
           main: primaryColor,
@@ -69,10 +71,10 @@ const theme =
           selected: red[300],
           selectedOpacity: 1
         },
-        background: {
-          default: grey[400],
-          paper: grey[200]
-        },
+        // background: {
+        //   default: grey[400],
+        //   paper: grey[200]
+        // },
         common: {
           black: grey[900],
           white: grey[200]
@@ -98,6 +100,7 @@ const theme =
          `,
         },
       },
-    });
+    }
+  };
 
-export default theme;
+export default themes;

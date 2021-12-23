@@ -1,15 +1,17 @@
-import React, {Suspense} from 'react';
-import {BrowserRouter} from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import logo from './logo.svg';
-import {ThemeProvider} from "@mui/material/styles";
-import {CssBaseline, Paper, Typography } from "@mui/material";
-import {theme } from './libs/ui';
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, Paper, Typography, FormControlLabel, Switch } from "@mui/material";
+import { Theme } from './ThemeContext';
 
 const Providers = ({children}) => {
+  const  { activeTheme } = Theme();
+
   return (
       <BrowserRouter>
         <Suspense fallback={null}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={activeTheme}>
             <CssBaseline />
             {children}
           </ThemeProvider>
@@ -21,7 +23,6 @@ const Providers = ({children}) => {
 
 let style = {
   container: {
-    backgroundColor: 'primary.main',
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
@@ -33,12 +34,13 @@ let style = {
 }
 
 function App() {
+  const  { darkMode, setDarkMode } = Theme();
   return (
       <Providers>
         <Paper sx={style.container}>
           <header>
             <img src={logo} className="App-logo" alt="logo"/>
-            <Typography color='primary.contrast' sx={{fontWeight: 'bold'}}>
+            <Typography color='primary.main' sx={{fontWeight: 'bold'}}>
               Edit <code>src/App.js</code> and save to reload.
             </Typography>
             <a
@@ -50,6 +52,7 @@ function App() {
               Learn React
             </a>
           </header>
+          <FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />
         </Paper>
       </Providers>
   );
