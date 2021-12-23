@@ -2,8 +2,17 @@ import React, { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import logo from './logo.svg';
 import { ThemeProvider } from "@mui/material/styles";
-import { CssBaseline, Paper, Typography, FormControlLabel, Switch } from "@mui/material";
-import { Theme } from './ThemeContext';
+import { CssBaseline, Paper, Typography } from "@mui/material";
+import { Theme } from './contexts/ThemeContext';
+import { Alert, Header } from './components';
+
+// TODO move db config to .env file
+// TODO fix modal styling & use theme
+// TODO fix header styling & use theme
+// TODO create Pages page for launchpad landing page
+// TODO create Layout launchpad after login so we have steps (vertical steps in UserSidebar)
+// TODO create form for launchpad - use react-hook-form - break into sections that map to stpes in sidebar
+// TODO revisit login stuff to see if react-hook-form is the way to go
 
 const Providers = ({children}) => {
   const  { activeTheme } = Theme();
@@ -34,9 +43,10 @@ let style = {
 }
 
 function App() {
-  const  { darkMode, setDarkMode } = Theme();
+  // const  { darkMode, setDarkMode } = Theme();
   return (
       <Providers>
+        <Header />
         <Paper sx={style.container}>
           <header>
             <img src={logo} className="App-logo" alt="logo"/>
@@ -52,8 +62,8 @@ function App() {
               Learn React
             </a>
           </header>
-          <FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />
         </Paper>
+        <Alert />
       </Providers>
   );
 }
