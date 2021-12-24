@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Grid, } from '@mui/material';
 import { LPStatus } from '../components';
-import StickyBox from "react-sticky-box";
-import { useTranslation } from "react-i18next";
+import StickyBox from 'react-sticky-box';
+import { useTranslation } from 'react-i18next';
 import { PageLayout } from '.';
 // TODO Steps might be needed, but will likely be in the Step component
 // import { resourcePages } from 'utils';
