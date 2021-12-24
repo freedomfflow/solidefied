@@ -2,7 +2,6 @@ import React from 'react';
 import {
   AppBar,
   Container,
-  FormControlLabel,
   Switch,
   Toolbar,
   Typography,
@@ -11,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppState } from '../contexts/AppContext';
 import { Theme } from '../contexts/ThemeContext';
 import { AuthModal, UserSidebar } from '../components';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 let style = {
   title: {
@@ -19,6 +20,8 @@ let style = {
     cursor: 'pointer',
   }
 };
+
+// TODO need to fix the styling for the Swtich -- unstyledswitch??
 
 const Header = () => {
   const navigate = useNavigate();
@@ -37,8 +40,14 @@ const Header = () => {
               >
                 SOLIDEFIED
               </Typography>
-              <FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />
+              {/*<FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />*/}
               { user ? <UserSidebar /> : <AuthModal /> }
+              <Switch
+                checked={darkMode}
+                icon={<LightModeOutlinedIcon />}
+                checkedIcon={<DarkModeOutlinedIcon />}
+                onChange={() => setDarkMode(!darkMode)}
+              />
             </Toolbar>
           </Container>
         </AppBar>

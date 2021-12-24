@@ -6,6 +6,7 @@ import { auth } from '../libs/dataStores/firebase';
 const App = createContext();
 
 const AppContext = ({children}) => {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null)
   const [alert, setAlert] = useState({
     open: false,
@@ -14,9 +15,15 @@ const AppContext = ({children}) => {
   });
 
   useEffect(() => {
+    setLoading(true);
     onAuthStateChanged(auth, (user) => {
-      if (user) setUser(user);
-      else setUser(null);
+      if (user) {
+        setUser(user);
+      }
+      else {
+        setUser(null);
+      }
+      setLoading(false);
     });
 
   }, []);
@@ -24,6 +31,7 @@ const AppContext = ({children}) => {
   return (
       <App.Provider
           value={{
+            loading,
             alert,
             setAlert,
             user,

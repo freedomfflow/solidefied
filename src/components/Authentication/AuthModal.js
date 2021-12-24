@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Box, Modal, Backdrop, Button, Fade, Tab, Tabs } from '@mui/material';
+import { AppBar, Box, Modal, Button, Fade, Tab, Tabs } from '@mui/material';
 import { Login, Signup } from '../../components';
 import GoogleButton from 'react-google-button';
 import { GoogleAuthProvider } from '@firebase/auth';
@@ -15,7 +15,7 @@ let style = {
   },
   paper: {
     width: 400,
-    backgroundColor: 'primary.main',
+    backgroundColor: 'primary.light',
     color: 'white',
     borderRadius: 5
   },
@@ -29,7 +29,10 @@ let style = {
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'center',
+    width: '100%',
+    gap: 2,
     fontSize: 20,
+    outline: 'none'
   }
 };
 
@@ -54,6 +57,8 @@ const AuthModal = () => {
   const googleProvider = new GoogleAuthProvider();
 
   const signInWithGoogle = () => {
+    console.log('Google');
+    console.log(auth);
     signInWithPopup(auth, googleProvider)
         .then(res => {
           setAlert({
@@ -92,10 +97,6 @@ const AuthModal = () => {
             open={open}
             onClose={handleClose}
             closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
-            }}
         >
           <Fade in={open}>
             <Box sx={style.paper}>
@@ -107,7 +108,7 @@ const AuthModal = () => {
                     value={value}
                     onChange={handleChange}
                     variant='fullWidth'
-                    sx={{ borderRadius: 10}}
+                    sx={{ borderRadius: 10 }}
                 >
                   <Tab label="Login" />
                   <Tab label="Sign Up" />
@@ -117,9 +118,10 @@ const AuthModal = () => {
               {value === 1 && <Signup handleClose={handleClose} />}
               <Box sx={style.google}>
                 <span> - OR - </span>
-                  <GoogleButton
-                      onClick={signInWithGoogle}
-                  />
+                <GoogleButton
+                  type='dark'
+                  onClick={signInWithGoogle}
+                />
               </Box>
             </Box>
           </Fade>

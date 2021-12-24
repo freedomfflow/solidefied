@@ -24,6 +24,7 @@
     "react-i18next": "^11.15.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-sticky-box": "^0.9.3",
     "react-yup": "^1.23.0",
     "swr": "^1.1.1",
     "web-vitals": "^2.1.2",

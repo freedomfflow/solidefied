@@ -58,7 +58,6 @@ const Login = () => {
         <Button
             variant='contained'
             size='large'
-            style={{ backgroundColor: '#EEBC1D' }}
             onClick={handleSubmit}
         >
           Login
