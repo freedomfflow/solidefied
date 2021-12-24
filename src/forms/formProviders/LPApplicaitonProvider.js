@@ -30,6 +30,7 @@ const LPApplicationProvider = () => {
           loading ? (
               <LinearProgress />
           ) : (
+              <>
               <Box sx={{mx: 'auto', width: 600}}>
                 <Container>
                   <FormProvider {...methods}>
@@ -52,6 +53,7 @@ const LPApplicationProvider = () => {
                   </FormProvider>
                 </Container>
               </Box>
+            </>
           )
         }
       </>

@@ -5,6 +5,7 @@ const style = {
   page: {
     width: '100%',
     minHeight: '100vh',
+    paddingTop: 6,
     // display: 'flex',
     // flexDirection: 'column',
     // alignItems: 'center',

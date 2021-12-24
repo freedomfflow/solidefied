@@ -30,7 +30,7 @@ const Header = () => {
   const  { darkMode, setDarkMode } = Theme();
 
   return (
-        <AppBar color='transparent' position='static'>
+        <AppBar position='sticky'>
           <Container>
             <Toolbar>
               <Typography color='primary.main'
