@@ -1,9 +1,9 @@
 import React from 'react';
-import {AppState} from '../../contexts/AppContext';
-import {useFormContext, Controller} from 'react-hook-form';
-import {Box, LinearProgress, TextField} from '@mui/material';
+import { AppState } from '../../contexts/AppContext';
+import { useFormContext, Controller } from 'react-hook-form';
+import { Box, LinearProgress, TextField, Typography } from '@mui/material';
 
-const LPApplicationInit = () => {
+const LPApplicationInit = ({title}) => {
   const {loading, user, setAlert} = AppState();
   const {control, formState: {errors}} = useFormContext();
 
@@ -14,6 +14,7 @@ const LPApplicationInit = () => {
               <LinearProgress />
           ) : (
               <>
+                <Typography variant='h4' sx={{mb: 2}}>{title}</Typography>
                 <Box>
                   <Controller
                       name='email'

@@ -13,6 +13,7 @@ const AppContext = ({children}) => {
     message: '',
     type: 'success'
   });
+  const [activeLPStep, setActiveLPStep] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -35,6 +36,8 @@ const AppContext = ({children}) => {
             alert,
             setAlert,
             user,
+            activeLPStep,
+            setActiveLPStep,
           }}
       >
         {children}

@@ -1,29 +1,36 @@
 import React from 'react';
-import {Controller, useFormContext} from 'react-hook-form';
-import {Box, TextField} from '@mui/material';
+import { useFormContext} from 'react-hook-form';
+import { Box, FormControl, FormLabel } from '@mui/material';
+import { FormInputRadio } from '..';
 
+// TODO find API to useFormContext so I know how to view whats in it
+// TODO if radion selection is yes, need to unhide a new question, 'where is it incorporated'
 const LPBusinessInfo = () => {
-  const {control, formState: {errors}} = useFormContext();
+  const { formState: {errors}} = useFormContext();
+
+  const options = [
+    {
+      label: 'Yes',
+      value: 1,
+    },
+    {
+      label: 'No',
+      value: 0
+    },
+  ];
+
   return (
       <>
         <Box>
-          <Controller
+          <FormControl component='fieldset'>
+            <FormLabel component='legend'>Is the Project/Business Incorporated?</FormLabel>
+            <FormInputRadio
               name='incorporated'
-              control={control}
-              defaultValue=''
-              render={({field}) => (
-                  <TextField
-                      {...field}
-                      label='Is the Business/Project Incorporated'
-                      type='incorporated'
-                      variant='outlined'
-                      error={!!errors.incorporated}
-                      helperText={errors.incorporated ? errors.incorporated?.message : ''}
-                      fullWidth
-                      margin='dense'
-                  />
-              )}
-          />
+              direction='row'
+              defaultValue='0'
+              options={options}
+            />
+          </FormControl>
         </Box>
       </>
   );
