@@ -10,12 +10,13 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   projectName: yup.string().required(),
   projectTicker: yup.string().required(),
+  incorporated: yup.string().required(),
 });
 
 // TODO add AppContext to store data if retrieved and/or when use inputs/updates data b4 submitting
 
 const LPApplicationProvider = () => {
-  const {loading, user, setAlert} = AppState();
+  const {loading, user, setAlert, activeLPStep} = AppState();
   const methods = useForm({
     resolver: yupResolver(schema)
   });
@@ -35,10 +36,10 @@ const LPApplicationProvider = () => {
                 <Container>
                   <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(formSubmitHandler)}>
-                      <Box>
-                        <LPApplicationInit/>
+                      <Box sx={ (activeLPStep === 0) ? {display: 'block'} : {display: 'none' } }>
+                        <LPApplicationInit title='Step 1'/>
                       </Box>
-                      <Box>
+                      <Box sx={ (activeLPStep === 1) ? {display: 'block'} : {display: 'none' } }>
                         <LPBusinessInfo/>
                       </Box>
                       <Box>

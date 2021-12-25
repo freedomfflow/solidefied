@@ -1,12 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import { Box, Button, Paper, Step, Stepper, StepContent, StepLabel, Typography } from '@mui/material';
+import { AppState } from '../contexts/AppContext';
 
 const steps = [
   {
@@ -37,23 +31,24 @@ const steps = [
 ];
 
 const LPStatus = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { activeLPStep, setActiveLPStep, user } = AppState();
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveLPStep((prevActiveLPStep) => prevActiveLPStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveLPStep((prevActiveLPStep) => prevActiveLPStep - 1);
   };
 
   const handleReset = () => {
-    setActiveStep(0);
+    setActiveLPStep(0);
   };
 
+  console.log('ActiveStep = ', activeLPStep);
   return (
       <Box sx={{ maxWidth: 400 }}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+        <Stepper activeStep={activeLPStep} orientation="vertical">
           {steps.map((step, index) => (
               <Step key={step.label}>
                 <StepLabel
@@ -89,7 +84,7 @@ const LPStatus = () => {
               </Step>
           ))}
         </Stepper>
-        {activeStep === steps.length && (
+        {activeLPStep === steps.length && (
             <Paper square elevation={0} sx={{ p: 3 }}>
               <Typography>All steps completed - you&apos;re finished</Typography>
               <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
