@@ -41,7 +41,7 @@ const Header = () => {
                 SOLIDEFIED
               </Typography>
               {/*<FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />*/}
-              { user ? <UserSidebar /> : <AuthModal /> }
+              { user ? <UserSidebar anchorItem='avatar' /> : <AuthModal /> }
               <Switch
                 checked={darkMode}
                 icon={<LightModeOutlinedIcon />}
