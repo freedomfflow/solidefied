@@ -15,8 +15,6 @@ const schema = yup.object().shape({
   incorporated: yup.string().required(),
 });
 
-// TODO add AppContext to store data if retrieved and/or when use inputs/updates data b4 submitting
-
 const LPApplicationProvider = () => {
   const {loading, user, setAlert, activeLPStep, lpappData, lpappUpdateTrigger, setLpappUpdateTrigger } = AppState();
   const methods = useForm({
@@ -26,18 +24,10 @@ const LPApplicationProvider = () => {
 
   // TODO put 'lpapps' in firebase config file I will used to map collections to identifiers
 
-  // TODO not quite working --
-  //  -- guess formData will be an object withing application - but would like to change I think
-  //  -- lpappData is lost when I 'save app data' on submit, but db is updated
-  //  need to fix above b4 I can move forward with form processing
   const saveAppData = async (formData) => {
-    console.log('SAV data');
-    console.log(lpappData);
-    console.log(formData);
     // Context var that will trigger firebase watcher in AppContext to update lpappData so context is current
     triggerCounter++;
     const dataSet = {...lpappData, formData};
-    console.log('DATA SET = ', dataSet);
     const appRef = doc(db, 'lpapps', lpappData.appId);
     try {
       await setDoc(appRef, {
