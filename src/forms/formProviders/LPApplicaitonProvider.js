@@ -59,6 +59,7 @@ const LPApplicationProvider = () => {
   }
 
   const formSubmitHandler = async (data) => {
+    console.log('FORM SUMBIT DATA', data);
     await saveAppData(data);
   }
 

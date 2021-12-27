@@ -68,7 +68,7 @@ const AppContext = ({children}) => {
         if (application.exists()) {
           console.log('SETTING LP APP DATA IN APP CONTEXT FROM USE EFFECT');
           console.log(application.data().application);
-          setLpappData(application.data().applicaiton)
+          setLpappData(application.data().application)
           console.log('lpappData right after I set it within unsub');
           console.log(lpappData);
         }

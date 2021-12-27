@@ -8,8 +8,8 @@ const LPApplicationInit = ({title}) => {
   const {control, formState: {errors}} = useFormContext();
 
   console.log('Form APp Init');
-  console.log(activeAppId);
   console.log(lpappData);
+  console.log(activeAppId);
   return (
       <>
         {
@@ -48,6 +48,7 @@ const LPApplicationInit = ({title}) => {
                               label='Project Name'
                               type='projectName'
                               variant='outlined'
+                              value={lpappData?.formData.projectName || ''}
                               error={!!errors.projectName}
                               helperText={errors.projectName ? errors.projectName?.message : ''}
                               fullWidth
