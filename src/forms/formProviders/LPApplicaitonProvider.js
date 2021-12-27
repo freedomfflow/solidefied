@@ -18,10 +18,11 @@ const schema = yup.object().shape({
 // TODO add AppContext to store data if retrieved and/or when use inputs/updates data b4 submitting
 
 const LPApplicationProvider = () => {
-  const {loading, user, setAlert, activeLPStep, lpappData, setLpappData} = AppState();
+  const {loading, user, setAlert, activeLPStep, lpappData, lpappUpdateTrigger, setLpappUpdateTrigger } = AppState();
   const methods = useForm({
     resolver: yupResolver(schema)
   });
+  let triggerCounter = lpappUpdateTrigger;
 
   // TODO put 'lpapps' in firebase config file I will used to map collections to identifiers
 
@@ -33,6 +34,8 @@ const LPApplicationProvider = () => {
     console.log('SAV data');
     console.log(lpappData);
     console.log(formData);
+    // Context var that will trigger firebase watcher in AppContext to update lpappData so context is current
+    triggerCounter++;
     const dataSet = {...lpappData, formData};
     console.log('DATA SET = ', dataSet);
     const appRef = doc(db, 'lpapps', lpappData.appId);
@@ -40,7 +43,7 @@ const LPApplicationProvider = () => {
       await setDoc(appRef, {
         application: dataSet,
       }, {merge: 'true'});
-      setLpappData(dataSet);
+      setLpappUpdateTrigger(triggerCounter);
       setAlert({
         open: true,
         message: 'Progress updated',
@@ -57,7 +60,6 @@ const LPApplicationProvider = () => {
 
   const formSubmitHandler = async (data) => {
     await saveAppData(data);
-    console.log('Form Data ' , data);
   }
 
   return (

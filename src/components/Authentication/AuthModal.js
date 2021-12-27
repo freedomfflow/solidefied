@@ -57,8 +57,6 @@ const AuthModal = () => {
   const googleProvider = new GoogleAuthProvider();
 
   const signInWithGoogle = () => {
-    console.log('Google');
-    console.log(auth);
     signInWithPopup(auth, googleProvider)
         .then(res => {
           setAlert({

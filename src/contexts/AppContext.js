@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from '../libs/dataStores/firebase';
-import { collection, doc, getDocs, query, where} from '@firebase/firestore';
+import { collection, doc, getDocs, query, onSnapshot, where} from '@firebase/firestore';
 
 const App = createContext();
 
@@ -13,14 +13,21 @@ const AppContext = ({children}) => {
     message: '',
     type: 'success'
   });
+  // Used with my mui 'Stepper' to keep track of where I am
   const [activeLPStep, setActiveLPStep] = useState(0);
-  // An array of apps for a userId
+  // An array of apps for a userId - used to list projects in UserSidebar
   const [appList, setAppList] = useState([]);
-  const [activeAppId, setActiveAppId] = useState(0);
+  // App whose data we want to ensure is in lpappData
+  const [activeAppId, setActiveAppId] = useState(null);
   // The current application Data for the activeApp
   const [lpappData, setLpappData] = useState();
+  // Literal trigger to force snapshot update from firebase db any time we save data - increment a counter to force state change
+  const [lpappUpdateTrigger, setLpappUpdateTrigger] = useState(0);
   // Array of userRoles for logged in user - array of objects
   const [userRoles, setUserRoles] = useState([]);
+
+  // Flag to use as condition to suppress useEffects from running on mount
+  const isMounted = useRef(false);
 
   const getApps = async (user) => {
     const appRef = collection(db, 'lpapps');
@@ -40,45 +47,52 @@ const AppContext = ({children}) => {
       }
       else {
         setUser(null);
-        setAppList([]);
+        // setAppList([]);
       }
       setLoading(false);
     });
 
   }, []);
 
+  // If user selects diff app, or if current app is updated, lets get app from db and set lpappData
+  useEffect(() => {
+    console.log('APP CONTEXT EFFECT FOR activeAppId');
+    console.log('activeappid = ', activeAppId);
+    console.log('lpappData', lpappData);
+    console.log('lpappDataTrigger', lpappUpdateTrigger);
+    if (isMounted.current && activeAppId) {
+      const appRef = doc(db, 'lpapps', activeAppId);
 
+      // Unsubscribe firebase listener after use
+      var unsubscribe = onSnapshot(appRef, (application) => {
+        if (application.exists()) {
+          console.log('SETTING LP APP DATA IN APP CONTEXT FROM USE EFFECT');
+          console.log(application.data().application);
+          setLpappData(application.data().applicaiton)
+          console.log('lpappData right after I set it within unsub');
+          console.log(lpappData);
+        }
+      })
 
-  // TODO
-  //  - when a logged in use wants to in initiate an app, I must generate a uuid, and create an app rec
-  //    in firebase in lpapps, with a uid = to users uid from their auth record
-  //  - then when saving app data, I save to lpapps with 'APP ID' as the key, and a uid must be in each doc
+      return () => {
+        console.log('About to unsub');
+        console.log(lpappData);
+        unsubscribe();
+      }
+    }
+  }, [activeAppId, lpappUpdateTrigger])
 
-  // TODO  modify this -- coin will be an 'lpapp id', and I will add form data, including the user id from authed user
-  //   - will also want to add a app-creator (uid of authed user)
-  //   - WL user map (authed user ids), WL wallet map (list of eth addrs admin can upload), WL nt map (list of nft contract addrs admin can load)
-  // TODO - create firebase rule for 'reviewer' collection, and have roles for users (to add comments or perhaps edit app)
-  // useEffect(() => {
-  //   if (user) {
-  //     const coinRef = doc(db, 'watchlist', user?.uid);
-  //
-  //     var unsubscribe = onSnapshot(coinRef, (coin) => {
-  //       if (coin.exists()) {
-  //         console.log('COIN DATA COINS');
-  //         console.log(coin.data().coins);
-  //         setWatchlist(coin.data().coins);
-  //       } else {
-  //         console.log('No items in Watchlist');
-  //       }
-  //     });
-  //
-  //     return () => {
-  //       unsubscribe();
-  //     }
-  //   }
-  // }, [user]);
+  /* NOTES:  useEffect
+    - To avoid useEffect's from rendering onLoad (when component mounts), which they all do even if limited by
+       dependencies, set up an 'isMounted' flag & use it as a condition in useEffect instances with dependencies.
+       Note that the effect to set 'isMounted' must always be the last useEffect as react runs them in the order they
+        written
+   */
 
-
+  // This MUSt always be the last useEffect instance
+  useEffect(() => {
+    isMounted.current = true;
+  }, [])
 
   return (
       <App.Provider
@@ -91,11 +105,12 @@ const AppContext = ({children}) => {
             activeLPStep,
             setActiveLPStep,
             lpappData,
-            setLpappData,
             activeAppId,
             setActiveAppId,
             appList,
             userRoles,
+            lpappUpdateTrigger,
+            setLpappUpdateTrigger
           }}
       >
         {children}

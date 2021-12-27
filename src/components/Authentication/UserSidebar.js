@@ -56,12 +56,15 @@ let style = {
     justifyContent: 'space-between',
     alignItems: 'center',
     boxShadow: '0 0 3px black'
+  },
+  '&:hover': {
+    cursor: 'pointer'
   }
 };
 
 const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const [state, setState] = useState({left: false,});
-  const {user, setAlert, setLoading, setLpappData, appList, userRoles, setActiveAppId} = AppState();
+  const {user, setAlert, setLoading, lpappData,activeAppId, appList, userRoles, setActiveAppId} = AppState();
 
   const navigate = useNavigate();
 
@@ -94,21 +97,23 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
           - list containing:  [{appId, role}]
    */
   const createNewApplication = async () => {
+    console.log('Creating NEW App');
     setLoading(true);
     const appId = uuid();
     try {
-      await firebaseAddNewApplication(appId);
-      setAlert({
-        open: true,
-        message: 'New project application initiated',
-        type: 'success'
+      await firebaseAddNewApplication(appId).then(() => {
+        setAlert({
+          open: true,
+          message: 'New project application initiated',
+          type: 'success'
+        });
+        setTimeout(() => {
+          setLoading(false);
+          toggleDrawer();
+          setActiveAppId(appId);
+          navigate(`/launchpad/application`);
+        }, 1000)
       });
-      setTimeout(() => {
-        setLoading(false);
-        toggleDrawer();
-        setActiveAppId(appId);
-        navigate(`/launchpad/application`);
-      }, 1000)
     } catch (error) {
       setAlert({
         open: true,
@@ -131,9 +136,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
           application: newAppData,
         }, {merge: 'false'})
             .then(async () => {
-              setLpappData(newAppData);
-              setActiveAppId(appId);
-
+              // setActiveAppId(appId);
               // Add Role Data
               let roleData = await getDoc(userRoleRef)
 
@@ -218,13 +221,21 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                     >
                       Project List
                     </Typography>
-                    {/*{appList.map((app, index) => <Typography variant='p' key={app.application.appId}>{app.application.appId}</Typography> )}*/}
                     {appList.map((app, index) => {
                       return (
                           <Typography
                               variant='p'
                               key={index}
-                              sx={style.project}
+                              onClick={ () => {
+                                console.log('clicked it');
+                                setActiveAppId(app.application.appId)
+                                setTimeout(() => {
+                                  toggleDrawer(anchor, false);
+                                  console.log(lpappData);
+                                  console.log(activeAppId);
+                                  navigate(`/launchpad/application`);
+                                }, 1000)
+                              }}
                           >
                             {app.application.projectName ? app.application.projectName : 'project--' + app.application.appId.slice(-4)}
                           </Typography>
