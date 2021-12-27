@@ -23,31 +23,40 @@ const LPApplicationProvider = () => {
     resolver: yupResolver(schema)
   });
 
-  console.log('lpappData = ', lpappData);
-
-  // TODO
-  //  - when a logged in use wants to in initiate an app, I must generate a uuid, and create an app rec
-  //    in firebase in lpapps, with a uid = to users uid from their auth record - not done here
-  //  - then when saving app data, I save to lpapps with 'APP ID' as key  -- done here
-
   // TODO put 'lpapps' in firebase config file I will used to map collections to identifiers
-  //   - this is like 'addToWatchList'
-  // const saveAppData = async (formData) => {
-  //   const appRef = doc(db, 'lpapps', user.uid);
-  //   try {
-  //     await setDoc(appRef, {
-  //       appData: lpappData ? [...lpappData, formData] : formData,
-  //     });
-  //   } catch (error) {
-  //     setAlert({
-  //       open: true,
-  //       message: error.message,
-  //       type: 'error',
-  //     })
-  //   }
-  // }
 
-  const formSubmitHandler = (data) => {
+  // TODO not quite working --
+  //  -- guess formData will be an object withing application - but would like to change I think
+  //  -- lpappData is lost when I 'save app data' on submit, but db is updated
+  //  need to fix above b4 I can move forward with form processing
+  const saveAppData = async (formData) => {
+    console.log('SAV data');
+    console.log(lpappData);
+    console.log(formData);
+    const dataSet = {...lpappData, formData};
+    console.log('DATA SET = ', dataSet);
+    const appRef = doc(db, 'lpapps', lpappData.appId);
+    try {
+      await setDoc(appRef, {
+        application: dataSet,
+      }, {merge: 'true'});
+      setLpappData(dataSet);
+      setAlert({
+        open: true,
+        message: 'Progress updated',
+        type: 'success',
+      })
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type: 'error',
+      })
+    }
+  }
+
+  const formSubmitHandler = async (data) => {
+    await saveAppData(data);
     console.log('Form Data ' , data);
   }
 

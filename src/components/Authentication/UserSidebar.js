@@ -3,7 +3,7 @@ import {Box, Button, Drawer, Avatar, Typography} from '@mui/material';
 import {AppState} from '../../contexts/AppContext';
 import {signOut} from '@firebase/auth';
 import { auth, db } from '../../libs/dataStores/firebase';
-import { doc, setDoc } from '@firebase/firestore';
+import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
 
@@ -61,7 +61,7 @@ let style = {
 
 const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const [state, setState] = useState({left: false,});
-  const {user, setAlert, setLoading, lpappData, setActiveAppId} = AppState();
+  const {user, setAlert, setLoading, setLpappData, appList, userRoles, setActiveAppId} = AppState();
 
   const navigate = useNavigate();
 
@@ -76,24 +76,31 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
     toggleDrawer();
   };
 
+  /*
+   DATA STRUCTURE
+    - collection - lpapps
+      - document -
+        - applications
+          - appId         - KEY
+          - userId        - create index
+          - projectName   - create index
+          -  ... each additional form field ...
+          - white list of users by uid  - MAP or ARRAY?
+          - white list of users by eth addr  - MAP or ARRAY?
+          - white list of users by nft contract addr  - MAP or ARRAY?
+     - collection - userRoles
+      - document
+        - userId
+          - list containing:  [{appId, role}]
+   */
   const createNewApplication = async () => {
-    //  application = { userId: abc,
-    //                  appData: { appId: <uuid>,
-    //                            projectName: <proj name>,
-    //                            appFormData: { lpappData }
     setLoading(true);
     const appId = uuid();
-    const appRef = doc(db, 'lpapps', user.uid);
-    const formData = {
-      'apps': { 'appId': appId, 'appData': { 'email': user.email, 'projectName': appId }}
-    }
     try {
-      await setDoc(appRef, {
-        application: lpappData ? [...lpappData, formData] : formData,
-      }, {merge: 'true'});
+      await firebaseAddNewApplication(appId);
       setAlert({
         open: true,
-        message: 'New project application created',
+        message: 'New project application initiated',
         type: 'success'
       });
       setTimeout(() => {
@@ -108,6 +115,45 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
         message: error.message,
         type: 'error',
       });
+    }
+  }
+
+  // Add 2 docs to 2 diff collections - user Transaction to ensure its atomic
+  //  - create lpapps with appId & userId (of logged in user)
+  //  - create/update userRole to add appId to list with role 'admin'
+  const firebaseAddNewApplication = async (appId) => {
+    const appRef = doc(db, 'lpapps', appId);
+    const userRoleRef = doc(db, 'userRoles', user.uid);
+    const newAppData = { 'appId': appId, 'userId': user.uid }
+    // Probably a better way to do the firebase updates here??
+    try {
+        await setDoc(appRef, {
+          application: newAppData,
+        }, {merge: 'false'})
+            .then(async () => {
+              setLpappData(newAppData);
+              setActiveAppId(appId);
+
+              // Add Role Data
+              let roleData = await getDoc(userRoleRef)
+
+              if (roleData.exists()) {
+                let hasRoleForApp = roleData.data().some((role) => {
+                  return role.appID === appId && role.role === 'admin';
+                });
+                if (!hasRoleForApp) {
+                  await setDoc(userRoleRef, {
+                    roles: [...userRoles, {'appId': appId, 'role': 'admin'}]
+                  })
+                }
+              } else {
+                await setDoc(userRoleRef, {
+                  roles: [{'appId': appId, 'role': 'admin'}]
+                })
+              }
+            })
+    } catch (error) {
+      return error;
     }
   }
 
@@ -172,23 +218,18 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                     >
                       Project List
                     </Typography>
-                    {/*{projects.map((project) => {*/}
-                    {/*  if (lpappData.includes(project.id)) {*/}
-                    {/*    return (*/}
-                    {/*      <div sx={style.project}>*/}
-                    {/*        <span>{project.name}</span>*/}
-                    {/*        <span style={{display: 'flex', gap: 8}}>*/}
-                    {/*          ticker */}
-                    {/*          <AiFillDelete*/}
-                    {/*            style={{cursor: 'pointer'}}*/}
-                    {/*          />*/}
-                    {/*        </span>*/}
-                    {/*      </div>*/}
-                    {/*    );*/}
-                    {/*  }*/}
-
-                    {/*  return '';*/}
-                    {/*})}*/}
+                    {/*{appList.map((app, index) => <Typography variant='p' key={app.application.appId}>{app.application.appId}</Typography> )}*/}
+                    {appList.map((app, index) => {
+                      return (
+                          <Typography
+                              variant='p'
+                              key={index}
+                              sx={style.project}
+                          >
+                            {app.application.projectName ? app.application.projectName : 'project--' + app.application.appId.slice(-4)}
+                          </Typography>
+                      );
+                    })}
                   </Box>
                   <Button
                       variant='contained'

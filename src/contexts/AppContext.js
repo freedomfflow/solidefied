@@ -1,9 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from '../libs/dataStores/firebase';
-// import { doc, setDoc, onSnapshot } from '@firebase/firestore';o
-
-import uuid from 'react-uuid';
+import { collection, doc, getDocs, query, where} from '@firebase/firestore';
 
 const App = createContext();
 
@@ -16,22 +14,39 @@ const AppContext = ({children}) => {
     type: 'success'
   });
   const [activeLPStep, setActiveLPStep] = useState(0);
-  const [lpappData, setLpappData] = useState();
+  // An array of apps for a userId
+  const [appList, setAppList] = useState([]);
   const [activeAppId, setActiveAppId] = useState(0);
+  // The current application Data for the activeApp
+  const [lpappData, setLpappData] = useState();
+  // Array of userRoles for logged in user - array of objects
+  const [userRoles, setUserRoles] = useState([]);
+
+  const getApps = async (user) => {
+    const appRef = collection(db, 'lpapps');
+    const q = query(appRef, where('application.userId', '==', user.uid) );
+    const data = await getDocs(q);
+    // console.log('GET APPS');
+    // console.log(data.docs.map((doc) => ({...doc.data()})));
+    setAppList(data.docs.map((doc) => ({...doc.data()})))
+  }
 
   useEffect(() => {
     setLoading(true);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        getApps(user);
       }
       else {
         setUser(null);
+        setAppList([]);
       }
       setLoading(false);
     });
 
   }, []);
+
 
 
   // TODO
@@ -79,6 +94,8 @@ const AppContext = ({children}) => {
             setLpappData,
             activeAppId,
             setActiveAppId,
+            appList,
+            userRoles,
           }}
       >
         {children}
