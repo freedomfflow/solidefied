@@ -5,6 +5,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 import * as yup from 'yup';
 import { Box, Container, Button, LinearProgress } from '@mui/material';
 import { LPApplicationInit, LPBusinessInfo } from '..';
+import { doc, setDoc } from '@firebase/firestore';
+import { db } from '../../libs/dataStores/firebase';
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -16,13 +18,49 @@ const schema = yup.object().shape({
 // TODO add AppContext to store data if retrieved and/or when use inputs/updates data b4 submitting
 
 const LPApplicationProvider = () => {
-  const {loading, user, setAlert, activeLPStep} = AppState();
+  const {loading, user, setAlert, activeLPStep, lpappData, lpappUpdateTrigger, setLpappUpdateTrigger } = AppState();
   const methods = useForm({
     resolver: yupResolver(schema)
   });
+  let triggerCounter = lpappUpdateTrigger;
 
-  const formSubmitHandler = (data) => {
-    console.log('Form Data ' , data);
+  // TODO put 'lpapps' in firebase config file I will used to map collections to identifiers
+
+  // TODO not quite working --
+  //  -- guess formData will be an object withing application - but would like to change I think
+  //  -- lpappData is lost when I 'save app data' on submit, but db is updated
+  //  need to fix above b4 I can move forward with form processing
+  const saveAppData = async (formData) => {
+    console.log('SAV data');
+    console.log(lpappData);
+    console.log(formData);
+    // Context var that will trigger firebase watcher in AppContext to update lpappData so context is current
+    triggerCounter++;
+    const dataSet = {...lpappData, formData};
+    console.log('DATA SET = ', dataSet);
+    const appRef = doc(db, 'lpapps', lpappData.appId);
+    try {
+      await setDoc(appRef, {
+        application: dataSet,
+      }, {merge: 'true'});
+      setLpappUpdateTrigger(triggerCounter);
+      setAlert({
+        open: true,
+        message: 'Progress updated',
+        type: 'success',
+      })
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type: 'error',
+      })
+    }
+  }
+
+  const formSubmitHandler = async (data) => {
+    console.log('FORM SUMBIT DATA', data);
+    await saveAppData(data);
   }
 
   return (

@@ -45,7 +45,6 @@ const LPStatus = () => {
     setActiveLPStep(0);
   };
 
-  console.log('ActiveStep = ', activeLPStep);
   return (
       <Box sx={{ maxWidth: 400 }}>
         <Stepper activeStep={activeLPStep} orientation="vertical">

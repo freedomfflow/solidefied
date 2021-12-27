@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /lpapps/{appId} {
+      allow read, create: if request.auth != null
+      allow update: if request.auth != null
+              && (request.resource.data.keys() == resource.data.keys()) 
+              && unchanged("appId");
+    }
+    // TODO Figure out how to say 'userRole for userId contains appId in list & role is admin'
+    // match /userRoles/{userId} {
+    // 	allow read, create, update: if isLoggedIn(userId)
+    //   				&& request.resource.data.appId == 
+    // }
+  }
+  
+  function isLoggedIn(userId) {
+    return request.auth.uid == userId
+  }
+  
+  // Determine if the value of the field "key" is the same
+  // before and after the request.
+  function unchanged(key) {
+    return (key in resource.data) 
+      && (key in request.resource.data) 
+      && (resource.data[key] == request.resource.data[key]);
+  }
+}
