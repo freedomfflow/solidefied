@@ -5,7 +5,7 @@ import { themes  } from '../libs/ui';
 const ThemeState = createContext();
 
 const ThemeContext = ({children}) => {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(true)
 
   // TODO will need to expand to another context var if/when we have more themes and want to use based on form selection
   let selectedTheme = themes['solidefied'];

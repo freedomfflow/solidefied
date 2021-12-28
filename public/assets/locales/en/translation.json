@@ -43,7 +43,7 @@
     "dexTools": "DEXTools",
     "buttons": {
       "goToLaunchPad": "Go to LaunchPad",
-      "applyForLaunchPad": "Apply for LaunchPad",
+      "applyForLaunchPad": "Apply for LaunchPad"
     }
   },
   "headerMenu": {
@@ -51,17 +51,68 @@
     "resources": "Resources",
     "aboutUs": "About Us",
     "descDex": "Decentralized Exchange (DEX)",
-    "descLaunchPad": "Token incubator service",
+    "descLaunchPad": "Token incubator service"
   },
   "footer": {
     "colHdr1": "Stay up to date",
     "colHdr2": "Services",
     "colHdr3": "Resources",
-    "colHdr4": "Community",
+    "colHdr4": "Community"
   },
   "launchpad": {
     "status": {
-      "title": "Launchpad Application Status",
+      "title": "Launchpad Application Status"
+    },
+    "steps": {
+      "total": 8,
+      "step0": {
+        "title": "Step 1",
+        "subtitle": "Project Name & Primary Contact",
+        "label": "Project Identification",
+        "longDescription": "There are many data points needed which we have broken out into several steps to help organize the application process. <br /><strong>Click on \"Save Progress\" anytime to retain what you have entered so far.</strong><br /> There sections consist of <i>Project Identification</i>, <i>Business</i>, <i>Financial</i>, <i>Team</i>, <i>Marketing</i>, <i>Dev Team</i>, <i>Comments</i>."
+      },
+      "step1": {
+        "title": "Step 2",
+        "subtitle": "Business Information",
+        "label": "Business Parameters & Details",
+        "longDescription": ""
+      },
+      "step2": {
+        "title": "Step 3",
+        "subtitle": "Financial Information",
+        "label": "Financial Details",
+        "longDescription": ""
+      },
+      "step3": {
+        "title": "Step 4",
+        "subtitle": "Management Team",
+        "label": "Principal Team Member Information",
+        "longDescription": ""
+      },
+      "step4": {
+        "title": "Step 5",
+        "subtitle": "Marketing Concepts",
+        "label": "Launch Promotion Plans",
+        "longDescription": "Marketing is critical to a successful launch.  The information you provide will enable us to assist you with a robust launch strategy."
+      },
+      "step5": {
+        "title": "Step 6",
+        "subtitle": "Dev Team",
+        "label": "Developer Team Information",
+        "longDescription": ""
+      },
+      "step6": {
+        "title": "Step 7",
+        "subtitle": "Additional Info",
+        "label": "Provide Additional Critical Project Information",
+        "longDescription": ""
+      },
+      "step7": {
+        "title": "Review & Submit",
+        "subtitle": "Review Application",
+        "label": "Review & Submit Your Applicaiton",
+        "longDescription": "Once you submit your application, Solidefied team members will be notified and begin the review process."
+      }
     }
   }
 }

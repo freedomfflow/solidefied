@@ -63,8 +63,7 @@ let style = {
 };
 
 const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
-  const [state, setState] = useState({left: false,});
-  const {user, setAlert, setLoading, lpappData,activeAppId, appList, userRoles, setActiveAppId} = AppState();
+  const {openDrawer, setOpenDrawer, user, setAlert, setLoading, appList, userRoles, setActiveAppId} = AppState();
 
   const navigate = useNavigate();
 
@@ -76,10 +75,20 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
       type: 'success'
     });
 
-    toggleDrawer();
+    toggleDrawer('left', false);
   };
 
+  const goToSelectedApp = (appId, anchor) => {
+    // calling toggleDrawer() not working, so forcing it manually here
+    setOpenDrawer({[anchor]: false});
+    // This will trigger useEffect in AppState to re-retrieve current appList so when new app created, its added to list
+    //  Not very efficient, but since at most someone will have 2 or 3 apps, its irrelevant
+    setActiveAppId(appId);
+    navigate(`/launchpad/application`);
+  }
+
   /*
+   TODO Dec 26, 2021 - This might not be accurate - update and put in README once I'm settled
    DATA STRUCTURE
     - collection - lpapps
       - document -
@@ -106,12 +115,8 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
           message: 'New project application initiated',
           type: 'success'
         });
-        setTimeout(() => {
-          setLoading(false);
-          toggleDrawer();
-          setActiveAppId(appId);
-          navigate(`/launchpad/application`);
-        }, 1000)
+        setLoading(false);
+        goToSelectedApp(appId, 'left');
       });
     } catch (error) {
       setAlert({
@@ -164,7 +169,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
       return;
     }
 
-    setState({...state, [anchor]: open});
+    setOpenDrawer({[anchor]: open});
   };
 
   return (
@@ -195,7 +200,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                         </Button>
                     )
               }
-              <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+              <Drawer anchor={anchor} open={openDrawer[anchor]} onClose={toggleDrawer(anchor, false)}>
                 <Box sx={style.container}>
                   <Box sx={style.profile}>
                     <Avatar
@@ -216,27 +221,25 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                   </Box>
                   <Box sx={style.projectList}>
                     <Typography
-                        sx={{fontSize: 15}}
+                        variant='h6'
                     >
                       Project List
                     </Typography>
-                    {appList.map((app, index) => {
-                      return (
+                    { (appList.length > 0) ?
+                        appList.map((app, index) => {
+                        return (
                           <Typography
+                              sx={{cursor: 'pointer'}}
                               variant='p'
                               key={index}
-                              onClick={ () => {
-                                setActiveAppId(app.application.appId)
-                                setTimeout(() => {
-                                  toggleDrawer(anchor, false);
-                                  navigate(`/launchpad/application`);
-                                }, 1000)
-                              }}
+                              onClick={() => goToSelectedApp(app.application.appId, 'left')}
                           >
                             {app.application.projectName ? app.application.projectName : 'project--' + app.application.appId.slice(-4)}
                           </Typography>
-                      );
-                    })}
+                        );
+                      }) :
+                        ('No Projects Yet')
+                    }
                   </Box>
                   <Button
                       variant='contained'

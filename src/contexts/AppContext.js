@@ -25,6 +25,8 @@ const AppContext = ({children}) => {
   const [lpappUpdateTrigger, setLpappUpdateTrigger] = useState(0);
   // Array of userRoles for logged in user - array of objects
   const [userRoles, setUserRoles] = useState([]);
+  // Handle 'left' drawer state from here
+  const [openDrawer, setOpenDrawer] = useState({left: false});
 
   // Flag to use as condition to suppress useEffects from running on mount
   const isMounted = useRef(false);
@@ -34,6 +36,8 @@ const AppContext = ({children}) => {
     const q = query(appRef, where('application.userId', '==', user.uid) );
     const data = await getDocs(q);
     setAppList(data.docs.map((doc) => ({...doc.data()})))
+    setTimeout(() => {
+    }, 1000)
   }
 
   useEffect(() => {
@@ -45,30 +49,22 @@ const AppContext = ({children}) => {
       }
       else {
         setUser(null);
-        // setAppList([]);
       }
       setLoading(false);
     });
 
   }, []);
 
-  // If user selects diff app, or if current app is updated, lets get app from db and set lpappData
+  // Inefficient but acceptable trigger - should be only if new app created, but this works fine w/negligable perf impact
   useEffect(() => {
-    if (isMounted.current && activeAppId) {
-      const appRef = doc(db, 'lpapps', activeAppId);
-
-      // Unsubscribe firebase listener after use
-      var unsubscribe = onSnapshot(appRef, (application) => {
-        if (application.exists()) {
-          setLpappData(application.data().application)
-        }
-      })
-
-      return () => {
-        unsubscribe();
+    if (isMounted.current) {
+      setLoading(true);
+      if (user) {
+        getApps(user);
       }
+      setLoading(false);
     }
-  }, [activeAppId, lpappUpdateTrigger])
+  }, [activeAppId]);
 
   /* NOTES:  useEffect
     - To avoid useEffect's from rendering onLoad (when component mounts), which they all do even if limited by
@@ -93,12 +89,15 @@ const AppContext = ({children}) => {
             activeLPStep,
             setActiveLPStep,
             lpappData,
+            setLpappData,
             activeAppId,
             setActiveAppId,
             appList,
             userRoles,
             lpappUpdateTrigger,
-            setLpappUpdateTrigger
+            setLpappUpdateTrigger,
+            openDrawer,
+            setOpenDrawer
           }}
       >
         {children}

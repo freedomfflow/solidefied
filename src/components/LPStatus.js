@@ -1,36 +1,51 @@
 import * as React from 'react';
 import { Box, Button, Paper, Step, Stepper, StepContent, StepLabel, Typography } from '@mui/material';
+import { useTranslation } from "react-i18next";
+import { Trans } from 'react-i18next';
 import { AppState } from '../contexts/AppContext';
 
+// TODO - For more html parsing from translation.json text, I can use the following
+// import parse from "html-react-parser";
+// {parse(t(item.a))}
+
+// TODO Can render the steps array dynamically
 const steps = [
   {
-    label: 'Select campaign settings',
-    description: `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`,
+    label: <Trans i18nKey='launchpad.steps.step0.label' />,
+    description: <Trans i18nKey='launchpad.steps.step0.longDescription' />,
   },
   {
-    label: 'Create an ad group',
-    description:
-        'An ad group contains one or more ads which target a shared set of keywords.',
+    label: <Trans i18nKey='launchpad.steps.step1.label' />,
+    description: <Trans i18nKey='launchpad.steps.step1.longDescription' />,
   },
   {
-    label: 'Create an ad',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
+    label: <Trans i18nKey='launchpad.steps.step2.label' />,
+    description: <Trans i18nKey='launchpad.steps.step2.longDescription' />,
   },
   {
-    label: 'Eat Shit',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
+    label: <Trans i18nKey='launchpad.steps.step3.label' />,
+    description: <Trans i18nKey='launchpad.steps.step3.longDescription' />,
+  },
+  {
+    label: <Trans i18nKey='launchpad.steps.step4.label' />,
+    description: <Trans i18nKey='launchpad.steps.step4.longDescription' />,
+  },
+  {
+    label: <Trans i18nKey='launchpad.steps.step5.label' />,
+    description: <Trans i18nKey='launchpad.steps.step5.longDescription' />,
+  },
+  {
+    label: <Trans i18nKey='launchpad.steps.step6.label' />,
+    description: <Trans i18nKey='launchpad.steps.step6.longDescription' />,
+  },
+  {
+    label: <Trans i18nKey='launchpad.steps.step7.label' />,
+    description: <Trans i18nKey='launchpad.steps.step7.longDescription' />,
   },
 ];
 
 const LPStatus = () => {
+  const { t } = useTranslation();
   const { activeLPStep, setActiveLPStep, user } = AppState();
 
   const handleNext = () => {
@@ -49,18 +64,24 @@ const LPStatus = () => {
       <Box sx={{ maxWidth: 400 }}>
         <Stepper activeStep={activeLPStep} orientation="vertical">
           {steps.map((step, index) => (
-              <Step key={step.label}>
+              <Step key={index}>
                 <StepLabel
                     optional={
-                      index === 2 ? (
-                          <Typography variant="caption">Last step</Typography>
+                      index === steps.length-1 ? (
+                          <Typography variant="caption">Click to review anytime</Typography>
                       ) : null
                     }
+                    onClick={() => {
+                      // Let user click on last step to review app anytime they want
+                      if (index === 7) setActiveLPStep(index)
+                    }}
                 >
                   {step.label}
                 </StepLabel>
                 <StepContent>
-                  <Typography>{step.description}</Typography>
+                  <Typography>
+                    {step.description}
+                  </Typography>
                   <Box sx={{ mb: 2 }}>
                     <div>
                       <Button

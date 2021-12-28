@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AppBar, Box, Modal, Button, Fade, Tab, Tabs } from '@mui/material';
 import { Login, Signup } from '../../components';
 import GoogleButton from 'react-google-button';
@@ -15,32 +15,34 @@ let style = {
   },
   paper: {
     width: 400,
-    backgroundColor: 'primary.light',
+    backgroundColor: 'primary.dark',
     color: 'white',
     borderRadius: 5
   },
   bar: {
     backgroundColor: 'transparent',
-    color: 'white'
+    color: 'white',
   },
   google: {
-    padding: 10,
+    paddingBottom: 2,
     paddingTop: 0,
     display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     width: '100%',
-    gap: 2,
     fontSize: 20,
     outline: 'none'
   }
 };
 
-const AuthModal = () => {
+const signupText = ['Sign Up Now'];
+
+const AuthModal = ({text = 'Login', buttonVariant = 'contained'}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
 
-  const { setAlert } = AppState();
+  const {setAlert} = AppState();
 
   // Flag to use as condition to suppress useEffects from running on mount
   const isMounted = useRef(false);
@@ -58,6 +60,12 @@ const AuthModal = () => {
       setOpen(false);
     }
   };
+
+  // TODO fragile way of handlng this - put in config or use regex or include a new prop
+  // Assign tab when we get here
+  useEffect(() => {
+      signupText.includes(text) ? setValue(1) : setValue(0);
+  }, [])
 
   // This MUSt always be the last useEffect instance
   useEffect(() => {
@@ -90,14 +98,11 @@ const AuthModal = () => {
   return (
       <div>
         <Button
-            variant='contained'
-            sx={{
-              width: 85,
-              height: 40,
-            }}
+            variant={buttonVariant}
+            size='medium'
             onClick={handleOpen}
         >
-          Login
+          {text}
         </Button>
         <Modal
             aria-labelledby="transition-modal-title"
@@ -117,19 +122,21 @@ const AuthModal = () => {
                     value={value}
                     onChange={handleChange}
                     variant='fullWidth'
-                    sx={{ borderRadius: 10 }}
+                    sx={{borderRadius: 10}}
                 >
-                  <Tab label="Login" />
-                  <Tab label="Sign Up" />
+                  <Tab label="Login"/>
+                  <Tab label="Sign Up"/>
                 </Tabs>
               </AppBar>
-              {value === 0 && <Login handleClose={handleClose} />}
-              {value === 1 && <Signup handleClose={handleClose} />}
+              {value === 0 && <Login handleClose={handleClose}/>}
+              {value === 1 && <Signup handleClose={handleClose}/>}
               <Box sx={style.google}>
                 <span> - OR - </span>
+              </Box>
+              <Box sx={{...style.google}}>
                 <GoogleButton
-                  type='dark'
-                  onClick={signInWithGoogle}
+                    type='dark'
+                    onClick={signInWithGoogle}
                 />
               </Box>
             </Box>
