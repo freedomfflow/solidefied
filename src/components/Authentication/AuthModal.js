@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { AppBar, Box, Modal, Button, Fade, Tab, Tabs } from '@mui/material';
 import { Login, Signup } from '../../components';
 import GoogleButton from 'react-google-button';
@@ -42,6 +42,9 @@ const AuthModal = () => {
 
   const { setAlert } = AppState();
 
+  // Flag to use as condition to suppress useEffects from running on mount
+  const isMounted = useRef(false);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -51,8 +54,16 @@ const AuthModal = () => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    if (isMounted.current) {
+      setOpen(false);
+    }
   };
+
+  // This MUSt always be the last useEffect instance
+  useEffect(() => {
+    isMounted.current = true;
+  }, [])
+
 
   const googleProvider = new GoogleAuthProvider();
 

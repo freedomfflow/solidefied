@@ -97,7 +97,6 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
           - list containing:  [{appId, role}]
    */
   const createNewApplication = async () => {
-    console.log('Creating NEW App');
     setLoading(true);
     const appId = uuid();
     try {
@@ -227,12 +226,9 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                               variant='p'
                               key={index}
                               onClick={ () => {
-                                console.log('clicked it');
                                 setActiveAppId(app.application.appId)
                                 setTimeout(() => {
                                   toggleDrawer(anchor, false);
-                                  console.log(lpappData);
-                                  console.log(activeAppId);
                                   navigate(`/launchpad/application`);
                                 }, 1000)
                               }}

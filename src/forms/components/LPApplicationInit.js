@@ -1,15 +1,12 @@
 import React from 'react';
 import { AppState } from '../../contexts/AppContext';
-import { useFormContext, Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Box, LinearProgress, TextField, Typography } from '@mui/material';
 
 const LPApplicationInit = ({title}) => {
   const {loading, user, setAlert, activeAppId, lpappData} = AppState();
   const {control, formState: {errors}} = useFormContext();
 
-  console.log('Form APp Init');
-  console.log(lpappData);
-  console.log(activeAppId);
   return (
       <>
         {
@@ -48,7 +45,6 @@ const LPApplicationInit = ({title}) => {
                               label='Project Name'
                               type='projectName'
                               variant='outlined'
-                              value={lpappData?.formData.projectName || ''}
                               error={!!errors.projectName}
                               helperText={errors.projectName ? errors.projectName?.message : ''}
                               fullWidth
