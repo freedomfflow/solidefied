@@ -39,7 +39,7 @@ const Login = () => {
   return (
       <Box
           p={3}
-          style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+          sx={{ display: 'flex', flexDirection: 'column', gap: '20px', label: {color: 'common.white'}}}
       >
         <TextField
             variant='outlined'

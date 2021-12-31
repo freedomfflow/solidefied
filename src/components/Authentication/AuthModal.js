@@ -15,7 +15,7 @@ let style = {
   },
   paper: {
     width: 400,
-    backgroundColor: 'primary.contrast',
+    backgroundColor: 'primary.dark',
     color: 'white',
     borderRadius: 5
   },
@@ -100,6 +100,7 @@ const AuthModal = ({text = 'Login', buttonVariant = 'contained'}) => {
         <Button
             variant={buttonVariant}
             size='medium'
+            color='secondary'
             onClick={handleOpen}
         >
           {text}
@@ -122,6 +123,8 @@ const AuthModal = ({text = 'Login', buttonVariant = 'contained'}) => {
                     value={value}
                     onChange={handleChange}
                     variant='fullWidth'
+                    textColor='white'
+                    indicatorColor='secondary'
                     sx={{borderRadius: 10}}
                 >
                   <Tab label="Login"/>
