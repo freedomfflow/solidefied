@@ -9,8 +9,9 @@ const ThemeContext = ({children}) => {
 
   // TODO will need to expand to another context var if/when we have more themes and want to use based on form selection
   // I can manually change theme here to one defined in themes.js, but I need to add a dark mode palette for custom theme
-  let selectedTheme = getTheme('dark', 'solidefied');
+  let selectedTheme = getTheme('dark', 'test');
   selectedTheme.palette.mode = darkMode ? 'dark' : 'light';
+  console.log('SEL THEM MODE', selectedTheme.palette.mode);
   const activeTheme = useMemo(() => createTheme(selectedTheme), [darkMode]);
 
   return (

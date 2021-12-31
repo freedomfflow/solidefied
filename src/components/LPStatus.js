@@ -61,15 +61,13 @@ const LPStatus = () => {
     setActiveLPStep(0);
   };
 
-  console.log('ACTIVE LP STEP', activeLPStep);
-
   return (
       <Box sx={{ maxWidth: 400 }}>
         <Stepper activeStep={activeLPStep} orientation="vertical">
           {steps.map((step, index) => (
               <Step key={index}>
                 <StepLabel
-                    sx={{ cursor: (index === steps.length-1) ? 'pointer' : 'default'}}
+                    sx={{ color: 'primary.dark', cursor: (index === steps.length-1) ? 'pointer' : 'default'}}
                     optional={
                       index === steps.length-1 ? (
                           <Typography variant="caption" sx={{ color: 'secondary.main', cursor: 'pointer'}} >Click to review anytime</Typography>
@@ -83,7 +81,7 @@ const LPStatus = () => {
                   {step.label}
                 </StepLabel>
                 <StepContent>
-                  <Typography>
+                  <Typography sx={{color: 'primary.main'}}>
                     {step.description}
                   </Typography>
                   <Box sx={{ mb: 2 }}>

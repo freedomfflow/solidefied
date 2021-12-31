@@ -17,6 +17,7 @@ import { Theme } from '../contexts/ThemeContext';
 import { AuthModal, UserSidebar } from '../components';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -67,7 +68,7 @@ const Header = () => {
 
   return (
       <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='sticky'>
+      <AppBar position='sticky' sx={{backgroundColor: 'primary.main'}}>
         <Container>
           <Toolbar>
             <FormGroup
@@ -181,8 +182,8 @@ const Header = () => {
             {user ? <UserSidebar anchorItem='avatar'/> : <AuthModal/>}
             <Switch
                 checked={darkMode}
-                icon={<LightModeOutlinedIcon/>}
-                checkedIcon={<DarkModeOutlinedIcon/>}
+                icon={<LightModeOutlinedIcon />}
+                checkedIcon={<DarkModeIcon sx={{color: 'secondary.main'}} />}
                 onChange={() => setDarkMode(!darkMode)}
             />
           </Toolbar>
