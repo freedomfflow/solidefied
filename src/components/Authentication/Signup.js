@@ -40,7 +40,7 @@ const Signup = ({ handleClose }) => {
   return (
       <Box
           p={3}
-          style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '20px', label: {color: 'common.white'} }}
       >
         <TextField
             variant='outlined'

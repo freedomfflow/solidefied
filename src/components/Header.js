@@ -75,7 +75,7 @@ const Header = () => {
             >
               <FormControlLabel
                   control={
-                    <Fab size='small' color='primary' aria-label="add"
+                    <Fab size='small' color='secondary' aria-label="add"
                          onClick={() => setOpenDrawer({left: true})}
                     >
                       <AddIcon />
