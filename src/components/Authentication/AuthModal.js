@@ -123,7 +123,6 @@ const AuthModal = ({text = 'Login', buttonVariant = 'contained'}) => {
                     value={value}
                     onChange={handleChange}
                     variant='fullWidth'
-                    textColor='white'
                     indicatorColor='secondary'
                     sx={{borderRadius: 10}}
                 >
