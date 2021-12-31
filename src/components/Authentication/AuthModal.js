@@ -15,7 +15,7 @@ let style = {
   },
   paper: {
     width: 400,
-    backgroundColor: 'primary.dark',
+    backgroundColor: 'primary.contrast',
     color: 'white',
     borderRadius: 5
   },

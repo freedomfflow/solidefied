@@ -27,6 +27,10 @@ const themes = {
   solidefied: {
       palette: {
         mode: 'dark',
+        primary: {
+          main: '#1976d2',
+          contrast: grey[900]
+        }
       },
       typography: {
         fontFamily: FONT_FAMILIES,
