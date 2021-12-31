@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Box, Button, Drawer, Avatar, Typography} from '@mui/material';
 import {AppState} from '../../contexts/AppContext';
 import {signOut} from '@firebase/auth';
@@ -6,6 +6,7 @@ import { auth, db } from '../../libs/dataStores/firebase';
 import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
+import { lpStatusValues} from '../../config/lpappConfig';
 
 let style = {
   container: {
@@ -79,6 +80,10 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   };
 
   const goToSelectedApp = (appId, anchor) => {
+    // TODO acquire app for appId and add logic to ensure app can't be edited unless status is 'pending'
+    //  - give warning msg stating applicaiton state and that its not able to be edited -- send to other page
+    //     that shows app info?  Or to launchpad page where they can see app detail?
+
     // calling toggleDrawer() not working, so forcing it manually here
     setOpenDrawer({[anchor]: false});
     // This will trigger useEffect in AppState to re-retrieve current appList so when new app created, its added to list
@@ -133,7 +138,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const firebaseAddNewApplication = async (appId) => {
     const appRef = doc(db, 'lpapps', appId);
     const userRoleRef = doc(db, 'userRoles', user.uid);
-    const newAppData = { 'appId': appId, 'userId': user.uid }
+    const newAppData = { 'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING }
     // Probably a better way to do the firebase updates here??
     try {
         await setDoc(appRef, {

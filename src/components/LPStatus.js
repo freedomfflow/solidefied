@@ -57,8 +57,11 @@ const LPStatus = () => {
   };
 
   const handleReset = () => {
+    console.log('Submitting Completed App');
     setActiveLPStep(0);
   };
+
+  console.log('ACTIVE LP STEP', activeLPStep);
 
   return (
       <Box sx={{ maxWidth: 400 }}>
@@ -66,9 +69,10 @@ const LPStatus = () => {
           {steps.map((step, index) => (
               <Step key={index}>
                 <StepLabel
+                    sx={{ cursor: (index === steps.length-1) ? 'pointer' : 'default'}}
                     optional={
                       index === steps.length-1 ? (
-                          <Typography variant="caption">Click to review anytime</Typography>
+                          <Typography variant="caption" sx={{ color: 'secondary.main', cursor: 'pointer'}} >Click to review anytime</Typography>
                       ) : null
                     }
                     onClick={() => {
@@ -89,7 +93,7 @@ const LPStatus = () => {
                           onClick={handleNext}
                           sx={{ mt: 1, mr: 1 }}
                       >
-                        {index === steps.length - 1 ? 'Finish' : 'Continue'}
+                        {index === steps.length - 1 ? 'Complete' : 'Continue'}
                       </Button>
                       <Button
                           disabled={index === 0}
@@ -106,9 +110,12 @@ const LPStatus = () => {
         </Stepper>
         {activeLPStep === steps.length && (
             <Paper square elevation={0} sx={{ p: 3 }}>
-              <Typography>All steps completed - you&apos;re finished</Typography>
-              <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                Reset
+              <Typography>If you are ready to submit your application, please submit it now.</Typography>
+              <Button
+                  onClick={handleBack}
+                  sx={{ mt: 1, mr: 1 }}
+              >
+                Back To Review
               </Button>
             </Paper>
         )}

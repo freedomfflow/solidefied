@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AppState } from '../../contexts/AppContext';
 import { useForm, FormProvider } from 'react-hook-form';
 import * as yup from 'yup';
-import { Box, Container, Button, LinearProgress } from '@mui/material';
+import { Box, Container, Button, Typography } from '@mui/material';
 import {
   LPApplicationInit,
   LPBusinessInfo,
@@ -13,10 +13,13 @@ import {
   LPDevTeamInfo,
   LPMoreInfo
 } from '..';
-import {doc, onSnapshot, setDoc} from '@firebase/firestore';
+import { doc, onSnapshot, setDoc } from '@firebase/firestore';
 import { db } from '../../libs/dataStores/firebase';
 import Loader from "react-loader-spinner";
+import emailjs from 'emailjs-com';
 import { useTranslation } from "react-i18next";
+import { lpStatusValues} from '../../config/lpappConfig';
+import { useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { UserSidebar } from '../../components';
 
@@ -28,8 +31,21 @@ const schema = yup.object().shape({
 });
 
 const LPApplicationProvider = () => {
-  const { t } = useTranslation();
-  const {setOpenDrawer, loading, setAlert, activeLPStep, activeAppId, lpappData, setLpappData, lpappUpdateTrigger, setLpappUpdateTrigger } = AppState();
+  const {t} = useTranslation();
+  const {
+    setOpenDrawer,
+    loading,
+    setAlert,
+    activeLPStep,
+    activeAppId,
+    setActiveAppId,
+    lpappData,
+    setLpappData,
+    lpappUpdateTrigger,
+    setLpappUpdateTrigger,
+  } = AppState();
+  const navigate = useNavigate();
+
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: lpappData
@@ -56,9 +72,7 @@ const LPApplicationProvider = () => {
 
       // Unsubscribe firebase listener after use
       var unsubscribe = onSnapshot(appRef, (application) => {
-        console.log('FireBase Data', application.data().application);
         if (application.exists()) {
-          console.log('SETTING LAP APP DATA', application.data().application);
           setLpappData(application.data().application)
           // Prefills forms after a submit
           methods.reset(application.data().application);
@@ -110,10 +124,9 @@ const LPApplicationProvider = () => {
     }
   }
 
-  const formSubmitHandler = async (data) => {
-    console.log('FORM SUMBIT DATA', data);
-    if (!activeAppId || activeAppId.length < 10)
-    {
+  // TODO Figure out how to detect errors on submit and handle a conversation with user to address errors
+  const formSubmitHandler = async (data, event) => {
+    if (!activeAppId || activeAppId.length < 10) {
       setAlert({
         open: true,
         message: 'There is no application selected, please select or start one to continue',
@@ -121,7 +134,29 @@ const LPApplicationProvider = () => {
       });
       setOpenDrawer({left: true});
     } else {
+      if (activeLPStep > REVIEW_STEP) {
+        data.appStatus = lpStatusValues.SUBMITTED;
+      }
+      // TODO perhaps a try/catch here and notify user if a problem?
       await saveAppData(data);
+
+      if (activeLPStep > REVIEW_STEP) {
+        await emailjs.sendForm(
+            process.env.REACT_APP_EMAILJS_SERVICE_ID,
+            process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+            event.target,
+            process.env.REACT_APP_EMAILJS_USER_ID,
+        );
+
+        setAlert({
+          open: true,
+          message: 'Application Submitted, Email Sent',
+          type: 'success',
+        });
+
+        setActiveAppId(null);
+        navigate(`/launchpad`);
+      }
     }
   }
 
@@ -130,49 +165,97 @@ const LPApplicationProvider = () => {
         {
           loading ? (
               <Box sx={{...style.loaderCenter}}>
-                <Loader type="Audio" color="#40FF40" />
+                <Loader type="Audio" color="#40FF40"/>
               </Box>
           ) : (
               <>
-              <Box sx={{mx: 'auto', width: 600}}>
-                <Container>
-                  <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(formSubmitHandler)}>
-                      <Box sx={ (activeLPStep === 0 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPApplicationInit />
-                      </Box>
-                      <Box sx={ (activeLPStep === 1 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPBusinessInfo />
-                      </Box>
-                      <Box sx={ (activeLPStep === 2 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPFinancialInfo />
-                      </Box>
-                      <Box sx={ (activeLPStep === 3 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPTeamInfo />
-                      </Box>
-                      <Box sx={ (activeLPStep === 4 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPMarketingPlans />
-                      </Box>
-                      <Box sx={ (activeLPStep === 5 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPDevTeamInfo />
-                      </Box>
-                      <Box sx={ (activeLPStep === 6 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none' } }>
-                        <LPMoreInfo />
-                      </Box>
-                      <Box>
-                        <Button
-                            variant='contained'
-                            sx={{mt: 2}}
-                            type='submit'
-                        >
-                          Save Progress
-                        </Button>
-                      </Box>
-                    </form>
-                  </FormProvider>
-                </Container>
-              </Box>
-            </>
+                <Box sx={{mx: 'auto', width: 600}}>
+                  <Container>
+                    <FormProvider {...methods}>
+                      <form onSubmit={methods.handleSubmit(formSubmitHandler)}>
+                        <Box
+                            sx={(activeLPStep === 0 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPApplicationInit/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 1 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPBusinessInfo/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 2 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPFinancialInfo/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 3 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPTeamInfo/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 4 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPMarketingPlans/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 5 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPDevTeamInfo/>
+                        </Box>
+                        <Box
+                            sx={(activeLPStep === 6 || activeLPStep === REVIEW_STEP) ? {display: 'block'} : {display: 'none'}}>
+                          <LPMoreInfo/>
+                        </Box>
+                        {
+                          (activeLPStep <= REVIEW_STEP)
+                              ? (
+                                  <>
+                                    <Box>
+                                      <Button
+                                          variant='contained'
+                                          sx={{mt: 2}}
+                                          type='submit'
+                                      >
+                                        Save Progress
+                                      </Button>
+                                    </Box>
+                                    <Box sx={{mt: 2}}>
+                                      <Typography
+                                          sx={{color: 'secondary.main'}}
+                                          variant='caption'
+                                      >
+                                        You can save your progress at any time. We suggest you do so frequently to ensure
+                                        nothing is lost if you get interrupted before completing the application in its
+                                        entirety.
+                                      </Typography>
+                                    </Box>
+                                  </>
+                              ) : (
+                                  <>
+                                    <Typography
+                                        variant='h3'
+                                    >
+                                      Need some content here
+                                    </Typography>
+                                    <Typography>
+                                      You are submitting the application for project {lpappData?.projectName}.  You will
+                                      receive a confirmation email and our team will be notified of your submission.
+                                      <br />
+                                      It will take several days to process your submission.  Feel free to contact us if
+                                      you have any questions.
+                                    </Typography>
+                                    <Box>
+                                      <Button
+                                          variant='contained'
+                                          sx={{mt: 2}}
+                                          type='submit'
+                                      >
+                                        Submit Application
+                                      </Button>
+                                    </Box>
+                                  </>
+                              )
+                        }
+                      </form>
+                    </FormProvider>
+                  </Container>
+                </Box>
+              </>
           )
         }
       </>
