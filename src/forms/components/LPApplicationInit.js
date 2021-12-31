@@ -2,10 +2,14 @@ import React from 'react';
 import { AppState } from '../../contexts/AppContext';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Box, LinearProgress, TextField, Typography } from '@mui/material';
+import { getStep } from '../../config/lpappConfig';
+import { useTranslation } from 'react-i18next';
 
-const LPApplicationInit = ({title}) => {
-  const {loading, user, setAlert, activeAppId, lpappData} = AppState();
+const LPApplicationInit = ({title, subTitle=''}) => {
+  const {t} = useTranslation();
+  const {activeLPStep, loading, user, setAlert, activeAppId, lpappData} = AppState();
   const {control, formState: {errors}} = useFormContext();
+  const thisStep = getStep('LPApplicationInit');
 
   return (
       <>
@@ -14,7 +18,16 @@ const LPApplicationInit = ({title}) => {
               <LinearProgress />
           ) : (
               <>
-                <Typography variant='h4' sx={{mb: 2}}>{title}</Typography>
+                {
+                  (activeLPStep !== 7) ? (
+                      <>
+                        <Typography variant='h4' sx={{mb: 1}}> {t(`launchpad.steps.${thisStep}.title`)} </Typography>
+                        <Typography variant='h6' sx={{mb: 1}}> {t(`launchpad.steps.${thisStep}.subtitle`)} </Typography>
+                      </>
+                  ) : (
+                      <Typography variant='h6' sx={{mt: 2, mb: 1}}> {t(`launchpad.steps.${thisStep}.subtitle`)} </Typography>
+                  )
+                }
                 <Box>
                   <Controller
                       name='email'

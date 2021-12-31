@@ -6,14 +6,15 @@ import { Theme } from './contexts/ThemeContext';
 import { Alert, Header } from './components';
 import { HomePage, LaunchpadApplicationPage, LaunchpadPage } from './Pages';
 
-// TODO move db config to .env file
+// TODO Code for when user wants to 'COMPLETE APP'
+//   - update status & show differently in sidebar
+//   - send email messages to applicant & solidefied peeps in launch pad app group email
+// TODO Launch pad landing page -- cards as per my desgin ideas
+// TODO Create a Theme switch
 // TODO fix modal styling & use theme
 // TODO fix header styling & use theme
-// TODO create Pages page for launchpad landing page
-// TODO create Layout launchpad after login so we have steps (vertical steps in UserSidebar)
-// TODO create form for launchpad - use react-hook-form - break into sections that map to stpes in sidebar
 // TODO revisit login stuff to see if react-hook-form is the way to go
-// TODO MAKE RESPONSIVE using sx
+// TODO MAKE RESPONSIVE using sx -- replace vertical stepper with a simple one across top for mobile
 
 const Providers = ({children}) => {
   const  { activeTheme } = Theme();

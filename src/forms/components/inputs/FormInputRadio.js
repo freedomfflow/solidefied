@@ -2,7 +2,7 @@ import React from 'react';
 import {Controller, useFormContext} from 'react-hook-form';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
-const FormInputRadio = ({name, direction, defaultValue, options}) => {
+const FormInputRadio = ({name, direction, defaultValue, options, onChange}) => {
   const {control, formState: {errors}} = useFormContext();
 
   const radioInput = () => {
@@ -11,6 +11,7 @@ const FormInputRadio = ({name, direction, defaultValue, options}) => {
             key={singleOption.value}
             value={singleOption.value}
             label={singleOption.label}
+            onChange={onChange}
             control={<Radio/>}
         />
     ));
