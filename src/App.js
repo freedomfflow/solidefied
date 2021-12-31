@@ -6,18 +6,17 @@ import { Theme } from './contexts/ThemeContext';
 import { Alert, Header } from './components';
 import { HomePage, LaunchpadApplicationPage, LaunchpadPage } from './Pages';
 
-// TODO Style project list and come up with app statuses
-//  - incomplete, under review, rejected, awaiting launch (date), active funding (link), launched
+// TODO Style project list  - show status and navigate accordingly
 // TODO need WL soln - where user can add WL uids and/or wallet or nft addresses
 // TODO add notes to an app - keyed by user_id
-// TODO Code for when user wants to 'COMPLETE APP'
+// TODO - STARTED - Code for when user wants to 'COMPLETE APP'
 //   - update status & show differently in sidebar
 //   - send email messages to applicant & solidefied peeps in launch pad app group email
-// TODO Launch pad landing page -- cards as per my desgin ideas
+// TODO -STARTED - Launch pad landing page -- cards as per my desgin ideas
 // TODO Add marquee with admin ui to manage content
 // TODO Add carousel to display crypto assets
 //      - link brings up page with chart
-// TODO Email - figure out how to send
+// TODO -DONE - Email - figure out how to send
 // TODO Create a Theme switch
 // TODO fix modal styling & use theme
 // TODO fix header styling & use theme
