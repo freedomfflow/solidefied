@@ -6,20 +6,18 @@ import {
   Fab,
   FormControlLabel,
   FormGroup,
-  Switch,
+  IconButton,
   Toolbar,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '../contexts/AppContext';
 import { Theme } from '../contexts/ThemeContext';
 import { AuthModal, UserSidebar } from '../components';
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
@@ -76,7 +74,7 @@ const Header = () => {
             >
               <FormControlLabel
                   control={
-                    <Fab size='small' color='secondary' aria-label="add"
+                    <Fab size='small' aria-label="add"
                          onClick={() => setOpenDrawer({left: true})}
                     >
                       <AddIcon />
@@ -141,9 +139,9 @@ const Header = () => {
                   <Button
                       key={page.name}
                       onClick={() => navigate(page.route)}
-                      sx={{ my: 2, color: 'white', display: 'block' }}
+                      sx={{ my: 2, display: 'block' }}
                   >
-                    {page.name}
+                    <Typography sx={{ color: 'info.main' }}>{page.name}</Typography>
                   </Button>
               ))}
             </Box>
@@ -178,14 +176,10 @@ const Header = () => {
               </Menu>
             </Box>
 
-            {/*<FormControlLabel control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />} label="Dark Mode" />*/}
             {user ? <UserSidebar anchorItem='avatar'/> : <AuthModal/>}
-            <Switch
-                checked={darkMode}
-                icon={<LightModeOutlinedIcon />}
-                checkedIcon={<DarkModeIcon sx={{color: 'secondary.main'}} />}
-                onChange={() => setDarkMode(!darkMode)}
-            />
+            <IconButton sx={{ ml: 1 }} onClick={() => setDarkMode(!darkMode)} color="inherit">
+              {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
           </Toolbar>
         </Container>
       </AppBar>

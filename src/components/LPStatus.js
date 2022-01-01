@@ -70,7 +70,7 @@ const LPStatus = () => {
                     sx={{ color: 'primary.dark', cursor: (index === steps.length-1) ? 'pointer' : 'default'}}
                     optional={
                       index === steps.length-1 ? (
-                          <Typography variant="caption" sx={{ color: 'secondary.main', cursor: 'pointer'}} >Click to review anytime</Typography>
+                          <Typography variant="caption" sx={{ color: 'secondary.info', cursor: 'pointer'}} >Click to review anytime</Typography>
                       ) : null
                     }
                     onClick={() => {
