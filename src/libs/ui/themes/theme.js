@@ -1,63 +1,65 @@
-import { green, grey, red, yellow } from '@mui/material/colors';
+import { green, grey, red, yellow, blue } from '@mui/material/colors';
 
-const testLight = {
+const defaultLight = {
   'text': {
-    'primary': 'rgba(0, 0, 0, 0.87)',
-    'secondary': 'rgba(0, 0, 0, 0.54)',
-    'disabled': 'rgba(0, 0, 0, 0.38)',
-    'hint': 'rgba(0, 0, 0, 0.38)'
+    'primary': '',
+    'secondary': '',
   },
   'primary': {
-    'main': '',
+    'mainOrig': '#0f4eac',
+    'main': 'rgba(87, 96, 121, 1)',
     'light': '',
     'dark': '',
   },
   'secondary': {
-    'main': '',
+    'main': 'rgba(123, 71, 90, 1)',
     'light': '',
     'dark': '',
     'contrastText': ''
   },
-  'error': {
-    'main': '',
+  'warning': {
+    'main': '#f44336',
     'light': '',
     'dark': '',
-    'contrastText': ''
+  },
+  'info': {
+    'main': 'rgba(249, 198, 198, 1)',
+    'light': '',
+    'dark': '',
   },
   'background': {
-    'paper': 'rgba(249, 243, 243, 1)',
-    'default': 'rgba(251, 251, 251, 1)',
+    'paper': '',
+    'default': '',
   }
 }
 
 const testDark = {
   'text': {
-    'primary': 'rgba(214, 214, 228, 1)',
-    'secondary': 'rgba(196, 192, 192, 1)',
-    'disabled': 'rgba(233, 224, 224, 0.38)',
-    'hint': 'rgba(168, 156, 156, 0.38)'
   },
   'primary': {
-    'main': 'rgba(87, 96, 121, 1)',
-    'light': 'rgba(140, 142, 151, 1)',
-    'dark': 'rgba(95, 102, 148, 1)',
-    'contrastText': 'rgba(255, 255, 255, 1)',
+    'main': '',
+    'light': '',
+    'dark': '',
   },
   'secondary': {
-    'main': 'rgba(123, 71, 90, 1)',
-    'light': 'rgba(193, 69, 111, 1)',
-    'dark': 'rgba(140, 102, 119, 1)',
-    'contrastText': 'rgba(249, 198, 198, 1)'
+    'main': '',
+    'light': '',
+    'dark': '',
+    'contrastText': ''
   },
-  'error': {
-    'main': '#f44336',
-    'light': '#e57373',
-    'dark': '#d32f2f',
-    'contrastText': '#fff',
+  'warning': {
+    'main': '',
+    'light': '',
+    'dark': '',
+  },
+  'info': {
+    'main': '',
+    'light': '',
+    'dark': '',
   },
   'background': {
-    'paper': 'rgba(86, 80, 80, 1)',
-    'default': 'rgba(8, 7, 7, 1)',
+    'paper': '',
+    'default': '',
   }
 }
 
@@ -71,11 +73,7 @@ const FONT_FAMILIES = [
   'sans-serif'
 ].join(',');
 
-// TODO  figure out global style strategy -- want to make a 'Loader' style to center & color globally
-// TODO?  make a base theme and deconstruct that to reuse in custom themes
-// TODO?  the concept is we might have diff themes as options for new applicants to select for auto generation of web page
-// TODO?  do I have a theme file for each theme, or have them all in here in an object??
-
+// Not using the light/dark custom theming -- letting MUI handle it all based on 'light' palette 'main' settings
 const getTheme = (mode, theme = 'solidefied') => {
   console.log('MODE', mode);
   console.log('THEME', theme);
@@ -90,65 +88,23 @@ const getTheme = (mode, theme = 'solidefied') => {
                 black: '#000',
                 white: '#fff'
               },
-              background: {
-                paper: testLight.background.paper,
-                default: testLight.background.default,
-              },
               primary: {
-                light: testLight.primary.light,
-                main: testLight.primary.main,
-                dark: testLight.primary.dark,
+                main: '#1e3cef',
               },
               secondary: {
-                light: testLight.secondary.light,
-                main: testLight.secondary.main,
-                dark: testLight.secondary.dark,
-                contrastText: testLight.secondary.contrastText,
+                main: '#ffea00',
               },
-              error: {
-                light: testLight.error.light,
-                main: testLight.error.main,
-                dark: testLight.error.dark,
-                contrastText: testLight.error.contrastText,
+              warning: {
+                main: '#6737d4',
               },
-              text: {
-                primary: testLight.text.primary,
-                secondary: testLight.text.secondary,
-                disabled: testLight.text.disabled,
-                hint: testLight.text.hint,
-              }
+              info: {
+                main: '#e621f3',
+              },
             }
             : {
               common: {
                 black: '#000',
                 white: '#fff'
-              },
-              background: {
-                paper: testDark.background.paper,
-                default: testDark.background.default,
-              },
-              primary: {
-                light: testDark.primary.light,
-                main: testDark.primary.main,
-                dark: testDark.primary.dark,
-              },
-              secondary: {
-                light: testDark.secondary.light,
-                main: testDark.secondary.main,
-                dark: testDark.secondary.dark,
-                contrastText: testDark.secondary.contrastText,
-              },
-              error: {
-                light: testDark.error.light,
-                main: testDark.error.main,
-                dark: testDark.error.dark,
-                contrastText: testDark.error.contrastText,
-              },
-              text: {
-                primary: testDark.text.primary,
-                secondary: testDark.text.secondary,
-                disabled: testDark.text.disabled,
-                hint: testDark.text.hint,
               },
             }),
       },
@@ -169,36 +125,29 @@ const getTheme = (mode, theme = 'solidefied') => {
     })
   } else if (theme === 'other') {
     console.log('Other Theme');
-    // add a theme
   } else {
     // Default theme
     console.log('Default Theme');
     return ({
       palette: {
-        mode,
-        ...(mode === 'light'
-            ? {
-              primary: {
-                main: '#1976d2',
-                contrast: grey[900]
-              },
-              common: {
-                black: '#000',
-                white: '#fff'
-              },
-            }
-            : {
-              primary: {
-                main: '#c0c0c0',
-                contrast: grey[200]
-              }
-            }),
+        mode: 'light',
+        primary: {
+          main: defaultLight.primary.main,
+        },
+        secondary: {
+          main: defaultLight.secondary.main,
+        },
+        warning: {
+          main: defaultLight.warning.main,
+        },
+        info: {
+          main: defaultLight.info.main,
+        },
       },
       typography: {
         fontFamily: FONT_FAMILIES,
       },
       components: {
-        // Name of the component
         MuiFormLabel: {
           styleOverrides: {
             root: {
@@ -213,3 +162,4 @@ const getTheme = (mode, theme = 'solidefied') => {
 }
 
 export default getTheme;
+

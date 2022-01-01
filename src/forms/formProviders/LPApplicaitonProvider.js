@@ -216,7 +216,7 @@ const LPApplicationProvider = () => {
                                     </Box>
                                     <Box sx={{mt: 2}}>
                                       <Typography
-                                          sx={{color: 'secondary.main'}}
+                                          sx={{color: 'info.main'}}
                                           variant='caption'
                                       >
                                         You can save your progress at any time. We suggest you do so frequently to ensure
