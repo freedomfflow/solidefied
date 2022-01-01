@@ -1,12 +1,13 @@
 import React from 'react';
-import {Box, Button, Drawer, Avatar, Typography} from '@mui/material';
-import {AppState} from '../../contexts/AppContext';
-import {signOut} from '@firebase/auth';
+import { Avatar, Box, Button, Drawer, Tooltip, Typography } from '@mui/material';
+import { AppState } from '../../contexts/AppContext';
+import { signOut } from '@firebase/auth';
 import { auth, db } from '../../libs/dataStores/firebase';
 import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
-import { lpStatusValues} from '../../config/lpappConfig';
+import { lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls } from '../../config/lpappConfig';
+import { useTranslation } from "react-i18next";
 
 let style = {
   container: {
@@ -35,10 +36,12 @@ let style = {
     width: '100%',
     marginTop: 2,
   },
+  holderSpace: {
+    height: '25%'
+  },
   projectList: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'grey',
     borderRadius: 10,
     padding: 1,
     paddingTop: 1,
@@ -46,12 +49,11 @@ let style = {
     flexDirection: 'column',
     alignItems: 'left',
     gap: 2,
-    overflowY: 'scroll'
+    overflowY: 'auto'
   },
   project: {
-    padding: 10,
+    padding: 2,
     borderRadius: 5,
-    color: 'black',
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
@@ -60,10 +62,15 @@ let style = {
   },
   '&:hover': {
     cursor: 'pointer'
+  },
+  tooltip: {
+    padding: '10px',
+    fontSize: '14px',
   }
 };
 
 const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
+  const { t } = useTranslation();
   const {openDrawer, setOpenDrawer, user, setAlert, setLoading, appList, userRoles, setActiveAppId} = AppState();
 
   const navigate = useNavigate();
@@ -79,17 +86,23 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
     toggleDrawer('left', false);
   };
 
-  const goToSelectedApp = (appId, anchor) => {
-    // TODO acquire app for appId and add logic to ensure app can't be edited unless status is 'pending'
-    //  - give warning msg stating applicaiton state and that its not able to be edited -- send to other page
-    //     that shows app info?  Or to launchpad page where they can see app detail?
-
-    // calling toggleDrawer() not working, so forcing it manually here
+  const goToSelectedApp = (app, anchor) => {
+    let appId;
+    let status = 'pending';
+    if (typeof(app) === 'object') {
+      appId = app.application.appId;
+      status = app.application.appStatus;
+    } else {
+      appId = app;
+    }
+    // If app is a string, its an appId, if an object, its an app Object
+    // For new app we pass a string, otherwise an object as we want more info
     setOpenDrawer({[anchor]: false});
+
     // This will trigger useEffect in AppState to re-retrieve current appList so when new app created, its added to list
     //  Not very efficient, but since at most someone will have 2 or 3 apps, its irrelevant
     setActiveAppId(appId);
-    navigate(`/launchpad/application`);
+    navigate(lpStatusValueUrls[status.toUpperCase()]);
   }
 
   /*
@@ -138,32 +151,32 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const firebaseAddNewApplication = async (appId) => {
     const appRef = doc(db, 'lpapps', appId);
     const userRoleRef = doc(db, 'userRoles', user.uid);
-    const newAppData = { 'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING }
+    const newAppData = {'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING}
     // Probably a better way to do the firebase updates here??
     try {
-        await setDoc(appRef, {
-          application: newAppData,
-        }, {merge: 'false'})
-            .then(async () => {
-              // setActiveAppId(appId);
-              // Add Role Data
-              let roleData = await getDoc(userRoleRef)
+      await setDoc(appRef, {
+        application: newAppData,
+      }, {merge: 'false'})
+          .then(async () => {
+            // setActiveAppId(appId);
+            // Add Role Data
+            let roleData = await getDoc(userRoleRef)
 
-              if (roleData.exists()) {
-                let hasRoleForApp = roleData.data().some((role) => {
-                  return role.appID === appId && role.role === 'admin';
-                });
-                if (!hasRoleForApp) {
-                  await setDoc(userRoleRef, {
-                    roles: [...userRoles, {'appId': appId, 'role': 'admin'}]
-                  })
-                }
-              } else {
+            if (roleData.exists()) {
+              let hasRoleForApp = roleData.data().some((role) => {
+                return role.appID === appId && role.role === 'admin';
+              });
+              if (!hasRoleForApp) {
                 await setDoc(userRoleRef, {
-                  roles: [{'appId': appId, 'role': 'admin'}]
+                  roles: [...userRoles, {'appId': appId, 'role': 'admin'}]
                 })
               }
-            })
+            } else {
+              await setDoc(userRoleRef, {
+                roles: [{'appId': appId, 'role': 'admin'}]
+              })
+            }
+          })
     } catch (error) {
       return error;
     }
@@ -224,25 +237,42 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                       {user.displayName || user.email}
                     </span>
                   </Box>
+                  <Box sx={style.holderSpace}>
+                    <Typography>Other Content Here</Typography>
+                  </Box>
                   <Box sx={style.projectList}>
                     <Typography
                         variant='h6'
                     >
                       Project List
                     </Typography>
-                    { (appList.length > 0) ?
+                    {(appList.length > 0) ?
                         appList.map((app, index) => {
-                        return (
-                          <Typography
-                              sx={{cursor: 'pointer'}}
-                              variant='p'
-                              key={index}
-                              onClick={() => goToSelectedApp(app.application.appId, 'left')}
-                          >
-                            {app.application.projectName ? app.application.projectName : 'project--' + app.application.appId.slice(-4)}
-                          </Typography>
-                        );
-                      }) :
+                          return (
+                              <Box sx={style.project} key={index}>
+                                <Typography
+                                    sx={{cursor: 'pointer'}}
+                                    variant='p'
+                                    key={app.application.appId}
+                                    onClick={() => goToSelectedApp(app, 'left')}
+                                >
+                                  {app.application.projectName ? app.application.projectName : 'project--' + app.application.appId.slice(-4)}
+                                </Typography>
+                                {
+                                  (app.application.appStatus)
+                                      ?
+                                      (
+                                          <Tooltip title={<Typography sx={style.tooltip}>{t(`${lpStatusValueTooltips[app.application.appStatus.toUpperCase()]}`)}</Typography>} placement='top-start'>
+                                            <Typography>{app.application.appStatus}</Typography>
+                                          </Tooltip>
+
+                                      ) : (
+                                          <span>&nbsp;</span>
+                                      )
+                                }
+                              </Box>
+                          );
+                        }) :
                         ('No Projects Yet')
                     }
                   </Box>
