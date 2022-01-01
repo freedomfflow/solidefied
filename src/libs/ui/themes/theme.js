@@ -75,8 +75,6 @@ const FONT_FAMILIES = [
 
 // Not using the light/dark custom theming -- letting MUI handle it all based on 'light' palette 'main' settings
 const getTheme = (mode, theme = 'solidefied') => {
-  console.log('MODE', mode);
-  console.log('THEME', theme);
   if (theme === 'test') {
     console.log('Test Theme');
     return ({
@@ -127,7 +125,6 @@ const getTheme = (mode, theme = 'solidefied') => {
     console.log('Other Theme');
   } else {
     // Default theme
-    console.log('Default Theme');
     return ({
       palette: {
         mode: 'light',
