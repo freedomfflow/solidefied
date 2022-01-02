@@ -16,6 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { AppState } from '../contexts/AppContext';
 import { Theme } from '../contexts/ThemeContext';
 import { AuthModal, UserSidebar } from '../components';
+import { signOut } from '@firebase/auth';
+import { auth, db } from '../libs/dataStores/firebase';
 
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -48,6 +50,17 @@ const Header = () => {
   const {setOpenDrawer, user} = AppState();
   const {darkMode, setDarkMode} = Theme();
 
+  const logOut = () => {
+    signOut(auth);
+    // setAlert({
+    //   open: true,
+    //   message: 'Logout Successful.',
+    //   type: 'success'
+    // });
+
+    // toggleDrawer('left', false);
+  };
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -55,8 +68,14 @@ const Header = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (setting) => {
+    console.log('HANDLING CLOSE');
+    console.log(setting);
     setAnchorElNav(null);
+    setAnchorElUser(null);
+    if (setting === 'Logout') {
+      logOut();
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -158,7 +177,7 @@ const Header = () => {
                   onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseNavMenu}>
+                    <MenuItem key={setting} onClick={() => handleCloseNavMenu(setting)}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                 ))}
