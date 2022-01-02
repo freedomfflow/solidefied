@@ -1,11 +1,12 @@
 import React from 'react';
-import { Avatar, Box, Button, Drawer, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, Drawer, IconButton, Tooltip, Typography } from '@mui/material';
 import { AppState } from '../../contexts/AppContext';
 import { signOut } from '@firebase/auth';
 import { auth, db } from '../../libs/dataStores/firebase';
 import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 import { lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls } from '../../config/lpappConfig';
 import { useTranslation } from "react-i18next";
 
@@ -210,12 +211,13 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
                           />
                         </>
                     ) : (
-                        <Button
-                            variant='outlined'
-                            onClick={toggleDrawer(anchor, true)}
-                        >
-                          {btnText}
-                        </Button>
+                        <>
+                          <Box sx={{mr: 2}}>
+                            <IconButton sx={{backgroundColor: 'secondary.dark'}} onClick={toggleDrawer(anchor, true)}>
+                              <AddIcon />
+                            </IconButton>
+                          </Box>
+                        </>
                     )
               }
               <Drawer anchor={anchor} open={openDrawer[anchor]} onClose={toggleDrawer(anchor, false)}>

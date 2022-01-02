@@ -36,8 +36,6 @@ const AppContext = ({children}) => {
     const q = query(appRef, where('application.userId', '==', user.uid) );
     const data = await getDocs(q);
     setAppList(data.docs.map((doc) => ({...doc.data()})))
-    setTimeout(() => {
-    }, 1000)
   }
 
   useEffect(() => {

@@ -3,6 +3,7 @@ export { default as LPBusinessInfo } from './components/LPBusinessInfo';
 export { default as LPApplicationProvider } from './formProviders/LPApplicaitonProvider';
 export { default as LPFinancialInfo } from './components/LPFinancialInfo';
 export { default as LPGetStarted } from './components/cards/LPGetStarted';
+export { default as LPProjectSummary } from './components/cards/LPProjectSummary';
 export { default as LPTeamInfo } from './components/LPTeamInfo';
 export { default as LPMarketingPlans } from './components/LPMarketingPlans';
 export { default as LPDevTeamInfo } from './components/LPDevTeamInfo';
