@@ -47,18 +47,17 @@ const Header = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
 
-  const {setOpenDrawer, user} = AppState();
+  const {setAlert, setOpenDrawer, user} = AppState();
   const {darkMode, setDarkMode} = Theme();
 
   const logOut = () => {
     signOut(auth);
-    // setAlert({
-    //   open: true,
-    //   message: 'Logout Successful.',
-    //   type: 'success'
-    // });
-
-    // toggleDrawer('left', false);
+    setOpenDrawer(false);
+    setAlert({
+      open: true,
+      message: 'Logout Successful.',
+      type: 'success'
+    });
   };
 
   const handleOpenNavMenu = (event) => {

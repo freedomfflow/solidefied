@@ -4,12 +4,12 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { Theme } from './contexts/ThemeContext';
 import { Alert, Header } from './components';
-import { HomePage, LaunchpadApplicationPage, LaunchpadPage } from './Pages';
+import { CoinPage, HomePage, LaunchpadApplicationPage, LaunchpadPage } from './Pages';
 
 // TODO - DONE - Style project list  - show status and navigate accordingly
 // TODO Copy menu formatting from yfdai site
-// TODO Add carousel to display crypto assets
-//      - link brings up page with chart
+// TODO - DONE - Add carousel to display crypto assets
+//      - STARTED - link brings up page with chart
 // TODO Generate a page from launchpad data
 // TODO Work on Launchpad page
 //   - use some content from white paper
@@ -50,6 +50,7 @@ function App() {
           <Route path='/' element={<HomePage />} exact />
           <Route path='/launchpad' element={<LaunchpadPage />} />
           <Route path='/launchpad/application' element={<LaunchpadApplicationPage />} />
+          <Route path='/coins/:id' element={<CoinPage />} />
         </Routes>
         <Alert />
       </Providers>
