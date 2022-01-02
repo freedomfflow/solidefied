@@ -6,7 +6,7 @@ import { Theme } from './contexts/ThemeContext';
 import { Alert, Header } from './components';
 import { HomePage, LaunchpadApplicationPage, LaunchpadPage } from './Pages';
 
-// TODO Style project list  - show status and navigate accordingly
+// TODO - DONE - Style project list  - show status and navigate accordingly
 // TODO Copy menu formatting from yfdai site
 // TODO Add carousel to display crypto assets
 //      - link brings up page with chart

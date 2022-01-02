@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { AppState } from '../contexts/AppContext';
-import { UserSidebar } from '../components';
-import { LPGetStarted } from '../forms';
+import { LPGetStarted, LPProjectSummary } from '../forms';
 
 // TODO set up cards??
 //   If not logged in
@@ -21,18 +20,21 @@ let style = {
   }
 }
 const LaunchpadPage = () => {
-  const {user} = AppState();
+  const {user, appList} = AppState();
   return (
       <>
         <h3> LAUNCH PAD PAGE</h3>
         <Box sx={{...style.cardContainer}}>
           {!user && (
               <>
-                <LPGetStarted/>
-                <LPGetStarted/>
-                <LPGetStarted/>
+                <LPGetStarted />
+                <LPGetStarted />
               </>
           )}
+          {appList.filter((app) => app.application.appStatus === 'submitted').map(submittedApp => (
+              <LPProjectSummary app={submittedApp} key={submittedApp.application.appId} />
+            ))
+          }
         </Box>
       </>
   );
