@@ -1,6 +1,7 @@
 export { default as LPApplicationInit } from './components/LPApplicationInit';
 export { default as LPBusinessInfo } from './components/LPBusinessInfo';
 export { default as LPApplicationProvider } from './formProviders/LPApplicaitonProvider';
+export { default as LPCarousel } from './components/cards/LPCarousel';
 export { default as LPFinancialInfo } from './components/LPFinancialInfo';
 export { default as LPGetStarted } from './components/cards/LPGetStarted';
 export { default as LPProjectSummary } from './components/cards/LPProjectSummary';
