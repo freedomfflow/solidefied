@@ -9,7 +9,7 @@ import { CoinPage, HomePage, LaunchpadApplicationPage, LaunchpadPage } from './P
 // TODO - DONE - Style project list  - show status and navigate accordingly
 // TODO Copy menu formatting from yfdai site
 // TODO - DONE - Add carousel to display crypto assets
-//      - STARTED - link brings up page with chart
+//      - DONE - link brings up page with chart
 // TODO Generate a page from launchpad data
 // TODO Work on Launchpad page
 //   - use some content from white paper

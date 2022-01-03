@@ -67,15 +67,15 @@ const LPStatus = () => {
           {steps.map((step, index) => (
               <Step key={index}>
                 <StepLabel
-                    sx={{ color: 'primary.dark', cursor: (index === steps.length-1) ? 'pointer' : 'default'}}
+                    sx={{ color: 'primary.dark', cursor: ([0,7].includes(index)) ? 'pointer' : 'default' }}
                     optional={
                       index === steps.length-1 ? (
                           <Typography variant="caption" sx={{ color: 'secondary.info', cursor: 'pointer'}} >Click to review anytime</Typography>
                       ) : null
                     }
                     onClick={() => {
-                      // Let user click on last step to review app anytime they want
-                      if (index === 7) setActiveLPStep(index)
+                      // Let user click on first or last step to review app anytime they want
+                      if ([0, 7].includes(index)) setActiveLPStep(index)
                     }}
                 >
                   {step.label}

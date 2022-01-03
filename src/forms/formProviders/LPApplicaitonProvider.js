@@ -37,6 +37,7 @@ const LPApplicationProvider = () => {
     loading,
     setAlert,
     activeLPStep,
+    setActiveLPStep,
     activeAppId,
     setActiveAppId,
     lpappData,
@@ -208,10 +209,18 @@ const LPApplicationProvider = () => {
                                     <Box>
                                       <Button
                                           variant='contained'
-                                          sx={{mt: 2}}
+                                          sx={{mt: 2, mr: 2}}
                                           type='submit'
                                       >
-                                        Save Progress
+                                        Save
+                                      </Button>
+                                      <Button
+                                          variant='contained'
+                                          sx={{mt: 2}}
+                                          type='submit'
+                                          onClick={() => setActiveLPStep(activeLPStep+1)}
+                                      >
+                                        Save & Continue
                                       </Button>
                                     </Box>
                                     <Box sx={{mt: 2}}>
