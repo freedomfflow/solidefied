@@ -1,4 +1,4 @@
-const firebaseConfig = {
+let firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "solidefied-e9533.firebaseapp.com",
   projectId: "solidefied-e9533",
@@ -9,3 +9,5 @@ const firebaseConfig = {
 };
 
 export default firebaseConfig;
+
+// apiKey: "AIzaSyBMMrFp6Nw23sAomzXmUedtfTOWgdnVXPQ",

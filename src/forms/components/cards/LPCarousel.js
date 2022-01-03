@@ -24,7 +24,7 @@ const LPCarousel = () => {
           <Typography sx={{mb: 2}} variant="h5" component="div">
             Launched Project Tracker
           </Typography>
-          <Carousel/>
+          <Carousel />
         </CardContent>
       </Card>
   );

@@ -13,7 +13,7 @@ import {
   LPDevTeamInfo,
   LPMoreInfo
 } from '..';
-import { doc, onSnapshot, setDoc } from '@firebase/firestore';
+import { doc, onSnapshot, updateDoc } from '@firebase/firestore';
 import { db } from '../../libs/dataStores/firebase';
 import Loader from "react-loader-spinner";
 import emailjs from 'emailjs-com';
@@ -26,8 +26,6 @@ import { UserSidebar } from '../../components';
 const schema = yup.object().shape({
   email: yup.string().email().required(),
   projectName: yup.string().required(),
-  projectTicker: yup.string().required(),
-  incorporated: yup.string().required(),
 });
 
 const LPApplicationProvider = () => {
@@ -68,6 +66,11 @@ const LPApplicationProvider = () => {
   // If user selects diff app, or if current app is updated, lets get app from db and set lpappData
   useEffect(() => {
     if (isMounted.current && activeAppId) {
+      // reset form & errors since we are changing applications
+      console.log('RESETTING TO NULL');
+      methods.reset({}, {keepDefaultValues: true});
+
+      // Could be a new app being created.. if so
       const appRef = doc(db, 'lpapps', activeAppId);
 
       // Unsubscribe firebase listener after use
@@ -103,10 +106,12 @@ const LPApplicationProvider = () => {
   const saveAppData = async (formData) => {
     // Context var that will trigger firebase watcher in AppContext to update lpappData so context is current
     triggerCounter++;
+    // After creating a new app, lpappData is munged
+    // const dataSet = (lpappData[0]) ? {...formData} : {...lpappData, ...formData};
     const dataSet = {...lpappData, ...formData};
     const appRef = doc(db, 'lpapps', activeAppId);
     try {
-      await setDoc(appRef, {
+      await updateDoc(appRef, {
         application: dataSet,
       }, {merge: 'true'});
       setLpappUpdateTrigger(triggerCounter);

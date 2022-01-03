@@ -7,7 +7,7 @@ import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import { lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls } from '../../config/lpappConfig';
+import { lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls } from '../../config/lpappConfig';
 import { useTranslation } from "react-i18next";
 
 let style = {
@@ -72,7 +72,7 @@ let style = {
 
 const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const { t } = useTranslation();
-  const {openDrawer, setOpenDrawer, user, setAlert, setLoading, appList, userRoles, setActiveAppId} = AppState();
+  const {openDrawer, setOpenDrawer, user, setAlert, setLoading, appList, userRoles, setActiveLPStep, setActiveAppId} = AppState();
 
   const navigate = useNavigate();
 
@@ -103,6 +103,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
     // This will trigger useEffect in AppState to re-retrieve current appList so when new app created, its added to list
     //  Not very efficient, but since at most someone will have 2 or 3 apps, its irrelevant
     setActiveAppId(appId);
+    setActiveLPStep(0);
     navigate(lpStatusValueUrls[status.toUpperCase()]);
   }
 
@@ -152,14 +153,15 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   const firebaseAddNewApplication = async (appId) => {
     const appRef = doc(db, 'lpapps', appId);
     const userRoleRef = doc(db, 'userRoles', user.uid);
-    const newAppData = {'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING}
+    const newAppData = {...lpFormObj, 'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING}
     // Probably a better way to do the firebase updates here??
+    // Creating new app hear leaves out other form values, so radio buttons have no default values, which is ok
+    //  from a user experience, possibly preferred, but causes a console error when saving first time after creation
     try {
       await setDoc(appRef, {
         application: newAppData,
       }, {merge: 'false'})
           .then(async () => {
-            // setActiveAppId(appId);
             // Add Role Data
             let roleData = await getDoc(userRoleRef)
 

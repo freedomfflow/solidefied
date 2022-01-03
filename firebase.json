@@ -7,7 +7,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -27,5 +27,8 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
+  },
+  "functions": {
+    "source": "functions"
   }
 }

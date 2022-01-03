@@ -68,8 +68,6 @@ const Header = () => {
   };
 
   const handleCloseNavMenu = (setting) => {
-    console.log('HANDLING CLOSE');
-    console.log(setting);
     setAnchorElNav(null);
     setAnchorElUser(null);
     if (setting === 'Logout') {
