@@ -35,7 +35,12 @@ const AppContext = ({children}) => {
     const appRef = collection(db, 'lpapps');
     const q = query(appRef, where('application.userId', '==', user.uid) );
     const data = await getDocs(q);
-    setAppList(data.docs.map((doc) => ({...doc.data()})))
+    if (data) {
+      setAppList(data.docs.map((doc) => ({...doc.data()})))
+      // Now lets reset lappData to data matching current appId - filter and map to return what we need, and should be only one, but its an array, so take first element
+      setLpappData(data.docs.filter((doc) => doc.data().application.appId === activeAppId).map((doc) => ({...doc.data().application}))[0]);
+      // console.log('GET CURR APP DATA', data.docs.filter((doc) => doc.data().application.appId === activeAppId).map((doc) => ({...doc.data().application}))[0]);
+    }
   }
 
   useEffect(() => {

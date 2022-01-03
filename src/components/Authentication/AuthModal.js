@@ -64,7 +64,9 @@ const AuthModal = ({text = 'Login', buttonVariant = 'contained'}) => {
   // TODO fragile way of handlng this - put in config or use regex or include a new prop
   // Assign tab when we get here
   useEffect(() => {
+    if (isMounted.current) {
       signupText.includes(text) ? setValue(1) : setValue(0);
+    }
   }, [])
 
   // This MUSt always be the last useEffect instance

@@ -57,9 +57,70 @@ const lpStatusValueTooltips = {
   LAUNCHED: 'launched',
 }
 
+/*
+ * Using this to mitigate some issues with firebase and react-form-hook
+ * When I create a firebase application document for the first time I was only using userId, appId, and appStatus
+ * This causes an issue when the user then updates the app the first time since some default values don't exist
+ * as the initial app creation is done outsie the form context
+ * This is I'm sure not necessary once I figure out how to use these tools better, as this will be a maintenance headache
+ */
+let lpFormObj = {
+  'userId': '',
+  'appId': '',
+  'appStatus': '',
+  'activePartnerships': '',
+  'additionalInfo': '',
+  'blockchainIndustry': '',
+  'businessModel': '',
+  'coreDevEducationLevels': '',
+  'coreDevExperienceLevels': '',
+  'coreDevLocations': '',
+  'coreDevs': '',
+  'country': '',
+  'devCommitments': '',
+  'devsInHouse': '',
+  'email': '',
+  'founderEmails': '',
+  'fundingSource': '',
+  'governanceModel': '',
+  'incorporated': '',
+  'initialFundraisingEfforts': '',
+  'initialFundraisingStatus': '0',
+  'licenseList': '',
+  'licensing': '0',
+  'licensingPlan': '0',
+  'marketingInitiatives': '',
+  'marketingPlan': '',
+  'maxRaise': '',
+  'mvp': '0',
+  'opinionLetter': '0',
+  'pendingPartnerships': '',
+  'presalePrice': '',
+  'projectName': '',
+  'projectTicker': '',
+  'publicPrice': '',
+  'referrer': '',
+  'region': '',
+  'roadmap': '',
+  'securityConcerns': '',
+  'smartContract': '0',
+  'socialFollowerCount': '',
+  'teamKYC': '0',
+  'teamMembers': '',
+  'telegramChannelUrl': '',
+  'telegramID': '',
+  'tgeMarketcap': '',
+  'tokenUtility': '',
+  'tokenomics': '',
+  'twitterUrl': '',
+  'websiteUrl': '',
+  'whitepaper': '',
+  'youtubeUrl': '',
+}
+
 const getStep = (componentName) => {
   const obj = lpApplicationSteps.steps;
   return Object.keys(obj).find(key => obj[key].componentName === componentName);
 }
 
-export { lpApplicationSteps, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, getStep };
+export { lpApplicationSteps, lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, getStep };

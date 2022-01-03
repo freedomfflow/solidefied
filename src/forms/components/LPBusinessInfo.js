@@ -99,7 +99,7 @@ const LPBusinessInfo = ({title, subTitle = ''}) => {
                     <FormInputRadio
                         name='incorporated'
                         direction='row'
-                        defaultValue='0'
+                        defaultValue='false'
                         options={radio_options}
                     />
                   </FormControl>
