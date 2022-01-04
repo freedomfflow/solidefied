@@ -1,4 +1,4 @@
-const firebaseConfig = {
+let firebaseConfig = {
   apiKey:"AIzaSyBMMrFp6Nw23sAomzXmUedtfTOWgdnVXPQ",
   authDomain: "solidefied-e9533.firebaseapp.com",
   projectId: "solidefied-e9533",
@@ -9,3 +9,4 @@ const firebaseConfig = {
 };
 
 export default firebaseConfig;
+
