@@ -7,7 +7,7 @@ import { doc, getDoc, setDoc } from '@firebase/firestore';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import { lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls } from '../../config/lpappConfig';
+import { lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, role } from '../../config/lpappConfig';
 import { useTranslation } from "react-i18next";
 
 let style = {
@@ -76,6 +76,7 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
 
   const navigate = useNavigate();
 
+  const ROLE_APP_ADMIN = role.APP_ADMIN;
   const logOut = () => {
     signOut(auth);
     setAlert({
@@ -129,15 +130,15 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
     setLoading(true);
     const appId = uuid();
     try {
-      await firebaseAddNewApplication(appId).then(() => {
-        setAlert({
-          open: true,
-          message: 'New project application initiated',
-          type: 'success'
-        });
-        setLoading(false);
-        goToSelectedApp(appId, 'left');
+      await firebaseAddNewApplication(appId);
+      setAlert({
+        open: true,
+        message: 'New project application initiated',
+        type: 'success'
       });
+      setLoading(false);
+      console.log('Goging to selected app', appId);
+      goToSelectedApp(appId, 'left');
     } catch (error) {
       setAlert({
         open: true,
@@ -158,28 +159,30 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
     // Creating new app hear leaves out other form values, so radio buttons have no default values, which is ok
     //  from a user experience, possibly preferred, but causes a console error when saving first time after creation
     try {
+      console.log('about to create new app', appId);
       await setDoc(appRef, {
         application: newAppData,
       }, {merge: 'false'})
-          .then(async () => {
-            // Add Role Data
-            let roleData = await getDoc(userRoleRef)
 
-            if (roleData.exists()) {
-              let hasRoleForApp = roleData.data().some((role) => {
-                return role.appID === appId && role.role === 'admin';
-              });
-              if (!hasRoleForApp) {
-                await setDoc(userRoleRef, {
-                  roles: [...userRoles, {'appId': appId, 'role': 'admin'}]
-                })
-              }
-            } else {
-              await setDoc(userRoleRef, {
-                roles: [{'appId': appId, 'role': 'admin'}]
-              })
-            }
+      // Add Role Data
+      let roleData = await getDoc(userRoleRef)
+
+
+      // TODO don't think I need this as it will always be a new appId, but I can prob use this code later elsewhere
+      if (roleData.exists()) {
+        let hasRoleForApp = roleData.data().roles.some((role) => {
+          return role.appID === appId && role.role === ROLE_APP_ADMIN;
+        });
+        if (!hasRoleForApp) {
+          await setDoc(userRoleRef, {
+            roles: [...roleData.data().roles, {'appId': appId, 'role': ROLE_APP_ADMIN}]
           })
+        }
+      } else {
+        await setDoc(userRoleRef, {
+          roles: [{'appId': appId, 'role': ROLE_APP_ADMIN}]
+        })
+      }
     } catch (error) {
       return error;
     }

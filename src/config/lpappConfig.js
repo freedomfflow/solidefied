@@ -57,6 +57,21 @@ const lpStatusValueTooltips = {
   LAUNCHED: 'launched',
 }
 
+const role = {
+  APP_ADMIN: 'applicationAdmin',
+  APP_PRINCIPAL: 'applicationPrincipal',
+  APP_MANAGER: 'applicationPrincipal',
+  APP_WL: 'whitelisted',
+}
+
+// MAKE SURE these are ordered by lowest ranking role to highest ranking role
+const roleHeirarchy = [
+  role.APP_WL,
+  role.APP_MANAGER,
+  role.APP_PRINCIPAL,
+  role.APP_ADMIN,
+];
+
 /*
  * Using this to mitigate some issues with firebase and react-form-hook
  * When I create a firebase application document for the first time I was only using userId, appId, and appStatus
@@ -123,4 +138,4 @@ const getStep = (componentName) => {
   return Object.keys(obj).find(key => obj[key].componentName === componentName);
 }
 
-export { lpApplicationSteps, lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, getStep };
+export { lpApplicationSteps, lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, role, roleHeirarchy, getStep };

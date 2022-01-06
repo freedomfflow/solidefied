@@ -1,8 +1,11 @@
 import React from 'react';
-import { Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import { AppState } from '../../../contexts/AppContext';
+import { role } from '../../../config/lpappConfig';
 
 const LPProjectSummary = ({app}) => {
+
+  const { currentRole } = AppState();
 
   return (
       <>
@@ -20,7 +23,11 @@ const LPProjectSummary = ({app}) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <div> Do Something </div>
+            <Box
+            sx={(currentRole === role.APP_ADMIN) ? {display: 'block'} : {display: 'none'}}>
+             Manage White Lists
+            </Box>
+            <Box> Do Something</Box>
           </CardActions>
         </Card>
       </>

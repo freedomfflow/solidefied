@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from '../libs/dataStores/firebase';
 import { collection, doc, getDocs, query, onSnapshot, where} from '@firebase/firestore';
+import { roleHeirarchy } from '../config/lpappConfig';
 
 const App = createContext();
 
@@ -27,6 +28,8 @@ const AppContext = ({children}) => {
   const [userRoles, setUserRoles] = useState([]);
   // Handle 'left' drawer state from here
   const [openDrawer, setOpenDrawer] = useState({left: false});
+  // Current role (string) of the active user/app
+  const [currentRole, setCurrentRole] = useState('');
 
   // Flag to use as condition to suppress useEffects from running on mount
   const isMounted = useRef(false);
@@ -37,10 +40,47 @@ const AppContext = ({children}) => {
     const data = await getDocs(q);
     if (data) {
       setAppList(data.docs.map((doc) => ({...doc.data()})))
-      // Now lets reset lappData to data matching current appId - filter and map to return what we need, and should be only one, but its an array, so take first element
+      // Now lets reset lappData to data matching current appId
+      // - filter and map to return what we need, and should be only one, but its an array, so take first element
       setLpappData(data.docs.filter((doc) => doc.data().application.appId === activeAppId).map((doc) => ({...doc.data().application}))[0]);
-      // console.log('GET CURR APP DATA', data.docs.filter((doc) => doc.data().application.appId === activeAppId).map((doc) => ({...doc.data().application}))[0]);
+
+      // We also want to know the role of this user for this app
+      const roleRef = collection(db, 'userRoles');
+      const rq = query(roleRef, where('__name__', '==', user.uid));
+      const roleData = await getDocs(rq);
+
+      // TODO could prob be a funciton that gets called
+      let userRolesForCurrentApp = roleData.docs.map((role, index) => {
+          let currRoles = [];
+          role.data().roles.forEach((role) => {
+            if (role.appId === activeAppId) {
+              currRoles.push(role.role);
+            }
+          })
+          return currRoles;
+      });
+      // This potentially returns an array of roles for a user for an app -- so I need to choose the highest ranked
+      if (userRolesForCurrentApp.length) {
+        // set to highest indexOf value in roleHierarchy
+        if (userRolesForCurrentApp[0].length === 1 ) {
+          setCurrentRole(userRolesForCurrentApp[0][0]);
+        } else {
+          setCurrentRole(getHighestRankingRole(userRolesForCurrentApp[0]));
+        }
+      }
     }
+  }
+
+  // TODO - prob put in a util lib for use elsewhere
+  const getHighestRankingRole = (roles) => {
+    let highestRole = '';
+    let highestRank = -1;
+    roles.forEach((role) => {
+      if (roleHeirarchy.indexOf(role) > highestRank) {
+        highestRole = role;
+      }
+    })
+    return highestRole;
   }
 
   useEffect(() => {
@@ -100,7 +140,8 @@ const AppContext = ({children}) => {
             lpappUpdateTrigger,
             setLpappUpdateTrigger,
             openDrawer,
-            setOpenDrawer
+            setOpenDrawer,
+            currentRole
           }}
       >
         {children}
