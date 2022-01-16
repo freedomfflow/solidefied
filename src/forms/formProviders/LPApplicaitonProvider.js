@@ -108,6 +108,7 @@ const LPApplicationProvider = () => {
     triggerCounter++;
     // After creating a new app, lpappData is munged
     // const dataSet = (lpappData[0]) ? {...formData} : {...lpappData, ...formData};
+    formData.lastUpdate = new Date().getTime();
     const dataSet = {...lpappData, ...formData};
     const appRef = doc(db, 'lpapps', activeAppId);
     try {

@@ -96,6 +96,7 @@ let lpFormObj = {
   'incorporated': '',
   'initialFundraisingEfforts': '',
   'initialFundraisingStatus': '0',
+  'lastUpdate': '',
   'licenseList': '',
   'licensing': '0',
   'licensingPlan': '0',

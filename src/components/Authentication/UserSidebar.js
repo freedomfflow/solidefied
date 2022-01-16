@@ -151,9 +151,10 @@ const UserSidebar = ({anchorItem, btnText = 'View Sidebar'}) => {
   //  - create lpapps with appId & userId (of logged in user)
   //  - create/update userRole to add appId to list with role 'admin'
   const firebaseAddNewApplication = async (appId) => {
+    const createTimestamp = new Date().getTime();
     const appRef = doc(db, 'lpapps', appId);
     const userRoleRef = doc(db, 'userRoles', user.uid);
-    const newAppData = {...lpFormObj, 'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING}
+    const newAppData = {...lpFormObj, 'appId': appId, 'userId': user.uid, 'appStatus': lpStatusValues.PENDING, 'lastUpdate': createTimestamp}
     // Probably a better way to do the firebase updates here??
     // Creating new app hear leaves out other form values, so radio buttons have no default values, which is ok
     //  from a user experience, possibly preferred, but causes a console error when saving first time after creation
