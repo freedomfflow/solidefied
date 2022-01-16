@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   AppBar, Avatar,
   Box,
@@ -60,20 +60,20 @@ const Header = () => {
     });
   };
 
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = useCallback((event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
+  }, []);
+  const handleOpenUserMenu = useCallback((event) => {
     setAnchorElUser(event.currentTarget);
-  };
+  }, []);
 
-  const handleCloseNavMenu = (setting) => {
+  const handleCloseNavMenu = useCallback((setting) => {
     setAnchorElNav(null);
     setAnchorElUser(null);
     if (setting === 'Logout') {
       logOut();
     }
-  };
+  }, []);
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);

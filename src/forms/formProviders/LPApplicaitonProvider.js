@@ -68,7 +68,6 @@ const LPApplicationProvider = () => {
   useEffect(() => {
     if (isMounted.current && activeAppId) {
       // reset form & errors since we are changing applications
-      console.log('RESETTING TO NULL');
       methods.reset({}, {keepDefaultValues: true});
 
       // Could be a new app being created.. if so

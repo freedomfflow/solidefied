@@ -57,7 +57,6 @@ const LPStatus = () => {
   };
 
   const handleReset = () => {
-    console.log('Submitting Completed App');
     setActiveLPStep(0);
   };
 

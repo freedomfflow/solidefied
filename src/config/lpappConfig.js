@@ -26,6 +26,16 @@ const lpApplicationSteps = {
   }
 }
 
+/*
+ * Filters for lpapps query function
+ * all - get all apps
+ * firstPreferPending - get first pending app, but if no pending apps but > 0 non-pending apps, return one
+ */
+const lpAppQueryType = {
+  'ALL': 'all',
+  'FIRST_PREFER_PENDING': 'firstPreferPending',
+}
+
 const lpStatusValues = {
   PENDING: 'pending',
   SUBMITTED: 'submitted',
@@ -123,4 +133,4 @@ const getStep = (componentName) => {
   return Object.keys(obj).find(key => obj[key].componentName === componentName);
 }
 
-export { lpApplicationSteps, lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, getStep };
+export { lpApplicationSteps, lpAppQueryType, lpFormObj, lpStatusValues, lpStatusValueTooltips, lpStatusValueUrls, getStep };
