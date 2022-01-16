@@ -68,7 +68,6 @@ const LPApplicationProvider = () => {
   useEffect(() => {
     if (isMounted.current && activeAppId) {
       // reset form & errors since we are changing applications
-      console.log('activeAppId or lpappUpdateTrigger CHG -- RESETTING TO NULL');
       methods.reset({}, {keepDefaultValues: true});
 
       // Could be a new app being created.. if so
@@ -77,10 +76,8 @@ const LPApplicationProvider = () => {
       // Unsubscribe firebase listener after use
       var unsubscribe = onSnapshot(appRef, (application) => {
         if (application.exists()) {
-          console.log('App Exists - setting LpAppData');
           setLpappData(application.data().application)
           // Prefills forms after a submit
-          console.log('Prefilling form after lpappdata reset');
           methods.reset(application.data().application);
         }
       })

@@ -33,7 +33,6 @@ const AppContext = ({children}) => {
   const isMounted = useRef(false);
 
   const getApps = async (user, type='all') => {
-    console.log('IN GET APPS', type);
     const appRef = collection(db, 'lpapps');
     const q = query(appRef, where('application.userId', '==', user.uid) );
     const data = await getDocs(q);
@@ -41,21 +40,15 @@ const AppContext = ({children}) => {
       if (type === lpAppQueryType.FIRST_PREFER_PENDING) {
         const firstPendingApp = data.docs.filter((doc) => doc.data().application.appStatus === lpStatusValues.PENDING).map((doc) => ({...doc.data().application}))[0];
         if (firstPendingApp) {
-          console.log('FIRS PENDING APP ID = ', firstPendingApp.appId);
           setActiveAppId(firstPendingApp.appId);
         } else {
-          console.log('No PEND APP, SO SET TO ', Object.values(data.docs)[0].appId);
           if (Object.values(data.docs)[0]) { setActiveAppId(Object.values(data.docs)[0].appId)}
         }
       } else {
         // Now lets reset lappData to data matching current appId - filter and map to return what we need, and should be only one, but its an array, so take first element
-        console.log('Setting LpAppData');
-        console.log(data);
         setLpappData(data.docs.filter((doc) => doc.data().application.appId === activeAppId).map((doc) => ({...doc.data().application}))[0]);
-        console.log('Setting App List');
         setAppList(data.docs.map((doc) => ({...doc.data()})))
       }
-      console.log('ACTIVE APP ID IS NOW', activeAppId);
     }
   }
 
@@ -65,12 +58,10 @@ const AppContext = ({children}) => {
       if (user) {
         // If here we are setting activeAppId via getApps, which will trigger getApps again
         //  for setting all other state dependent on activeAppId
-        console.log('Setting User on Mount', user);
         setUser(user);
         getApps(user, lpAppQueryType.FIRST_PREFER_PENDING);
       }
       else {
-        console.log('Setting User to Null on Mount');
         setUser(null);
       }
       setLoading(false);
@@ -81,7 +72,6 @@ const AppContext = ({children}) => {
   // Inefficient but acceptable trigger - should be only if new app created, but this works fine w/negligable perf impact
   useEffect(() => {
     if (isMounted.current) {
-      console.log('ActiveAppId CHG - getting Apps');
       setLoading(true);
       if (user) {
         getApps(user);
